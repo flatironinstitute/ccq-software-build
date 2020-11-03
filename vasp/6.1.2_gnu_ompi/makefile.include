@@ -26,10 +26,10 @@ DEBUG      = -O0
 
 LIBDIR     = /usr/lib/x86_64-linux-gnu
 
+# link dynamically agains scalapack and blacs from intel mkl, note intel mkl >2019 does not work
+LLIBS =  -L${MKLROOT}/lib/intel64 -Wl,--no-as-needed -lmkl_scalapack_lp64 -lmkl_gf_lp64 -lmkl_sequential -lmkl_core -lmkl_blacs_openmpi_lp64 -lpthread -lm -ldl
 
-LLIBS =  ${MKLROOT}/lib/intel64/libmkl_scalapack_lp64.a -Wl,--start-group ${MKLROOT}/lib/intel64/libmkl_gf_lp64.a ${MKLROOT}/lib/intel64/libmkl_sequential.a ${MKLROOT}/lib/intel64/libmkl_core.a ${MKLROOT}/lib/intel64/libmkl_blacs_openmpi_lp64.a -Wl,--end-group -lpthread -lm -ldl  
-
-LLIBS += ../../../wannier90/3.1_gnu_ompi/bin/libwannier.a
+LLIBS += ${libpath}/vasp_src/libwannier.a
 
 # FFTW
 LLIBS += -L${FFTW3_BASE}/lib -lfftw3
