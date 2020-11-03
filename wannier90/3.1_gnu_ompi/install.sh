@@ -28,5 +28,5 @@ cp postw90.x wannier90.x libwannier.a ../bin/
 cd ..
 path=`pwd`
 echo $path
-sed -i "s|REPLACEDIR|$path|g" module.file
+sed -i "s|REPLACEDIR|$path|g" module
 
