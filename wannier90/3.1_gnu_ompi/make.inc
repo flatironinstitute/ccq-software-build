@@ -1,7 +1,6 @@
 #===================
 # gfortran
 #===================
-//MKLROOT = /cm/shared/sw/pkg/vendor/intel-pstudio/2020/compilers_and_libraries_2020.0.166/linux/mkl
 
 F90 = gfortran -m64 -I${MKLROOT}/include
 
