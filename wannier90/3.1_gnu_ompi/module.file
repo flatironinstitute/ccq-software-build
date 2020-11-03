@@ -1,0 +1,26 @@
+#%Module1.0
+#
+# Module  W90 with GNU MKL  
+#
+
+set     name        wannier
+set     version     3.1_gnu_ompi_
+set     root        /mnt/home/ahampel/git/ccq-software-build/wannier90/3.1_gnu_ompi/wannier90 
+
+set     description "wannier90 vers3.1 compiled with gnu and openmpi"
+
+module-whatis   "$description"
+
+proc ModulesHelp { } {
+    global description url version git_hash
+    puts stderr "Description: $description"
+    puts stderr "Version:     $version"
+}
+
+# Only one version of triqs can be loaded at a time
+conflict $name intel/mpi intel/compiler
+
+
+module          load    gcc/7.4.0 openmpi4/4.0.5 intel/mkl/2019-3 lib/fftw3/3.3.8-openmpi4
+
+prepend-path    PATH    $root/bin
