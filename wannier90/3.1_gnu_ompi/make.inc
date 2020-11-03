@@ -5,14 +5,12 @@
 F90 = gfortran -m64 -I${MKLROOT}/include
 
 #Add next two lines for parallel postw90. Choose the correct name of the mpi f90 wrapper
-#COMMS  = mpi 
-#MPIF90 = mpif90 -m64 -I${MKLROOT}/include 
+COMMS  = mpi 
+MPIF90 = mpif90 -m64 -I${MKLROOT}/include 
 
 FCOPTS = -O3 
 LDOPTS =
 
-LIBS =  ${MKLROOT}/lib/intel64/libmkl_scalapack_lp64.a -Wl,--start-group ${MKLROOT}/lib/intel64/libmkl_gf_lp64.a ${MKLROOT}/lib/intel64/libmkl_sequential.a ${MKLROOT}/lib/intel64/libmkl_core.a ${MKLROOT}/lib/intel64/libmkl_blacs_openmpi_lp64.a -Wl,--end-group -lpthread -lm -ldl  
-
-
+LIBS = -L${MKLROOT}/lib/intel64 -Wl,--no-as-needed -lmkl_scalapack_lp64 -lmkl_gf_lp64 -lmkl_sequential -lmkl_core -lmkl_blacs_openmpi_lp64 -lpthread -lm -ldl
 
 
