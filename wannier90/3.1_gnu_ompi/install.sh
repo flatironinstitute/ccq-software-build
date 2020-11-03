@@ -25,7 +25,8 @@ mkdir ../bin
 cp postw90.x wannier90.x libwannier.a ../bin/
 
 # change module path
+cd ..
 path=`pwd`
 echo $path
-sed -i "s|REPLACEDIR|$path|g" ../module.file
+sed -i "s|REPLACEDIR|$path|g" module.file
 

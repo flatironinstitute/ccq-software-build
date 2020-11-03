@@ -4,8 +4,8 @@
 #
 
 set     name        wannier
-set     version     3.1_gnu_ompi_
-set     root        /mnt/home/ahampel/git/ccq-software-build/wannier90/3.1_gnu_ompi/wannier90 
+set     version     3.1_gnu_ompi
+set     root        REPLACEDIR 
 
 set     description "wannier90 vers3.1 compiled with gnu and openmpi"
 
