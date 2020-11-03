@@ -18,7 +18,7 @@ FCL        = mpif90 -m64 -I${MKLROOT}/include
 
 FREE       = -ffree-form -ffree-line-length-none
 
-FFLAGS     = -w -march=native
+FFLAGS     = -w
 
 OFLAG      = -O3
 OFLAG_IN   = $(OFLAG)
