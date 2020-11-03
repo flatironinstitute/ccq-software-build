@@ -1,0 +1,60 @@
+# Precompiler options
+CPP_OPTIONS= -DHOST=\"LinuxGNU\"\
+             -DMPI -DMPI_BLOCK=32000 \
+             -Duse_collective \
+             -DCACHE_SIZE=16000 \
+             -Davoidalloc \
+             -Duse_bse_te \
+             -Dtbdyn \
+             -Dvasp6 \
+			 -DscaLAPACK \
+			 -Dfock_dblbuf \
+			 -DVASP2WANNIER90v2
+
+CPP        = gcc -E -P -C -w $*$(FUFFIX) >$*$(SUFFIX) $(CPP_OPTIONS)
+
+FC         = mpif90 -m64 -I${MKLROOT}/include
+FCL        = mpif90 -m64 -I${MKLROOT}/include
+
+FREE       = -ffree-form -ffree-line-length-none
+
+FFLAGS     = -w -march=native
+
+OFLAG      = -O3
+OFLAG_IN   = $(OFLAG)
+DEBUG      = -O0
+
+LIBDIR     = /usr/lib/x86_64-linux-gnu
+
+
+LLIBS =  ${MKLROOT}/lib/intel64/libmkl_scalapack_lp64.a -Wl,--start-group ${MKLROOT}/lib/intel64/libmkl_gf_lp64.a ${MKLROOT}/lib/intel64/libmkl_sequential.a ${MKLROOT}/lib/intel64/libmkl_core.a ${MKLROOT}/lib/intel64/libmkl_blacs_openmpi_lp64.a -Wl,--end-group -lpthread -lm -ldl  
+
+LLIBS += ../../../wannier90/3.1_gnu_ompi/bin/libwannier.a
+
+# FFTW
+LLIBS += -L${FFTW3_BASE}/lib -lfftw3
+
+INCS       = -I/usr/include -I${MKLROOT}/include -I${FFTW3_BASE}/include
+
+OBJECTS    = fftmpiw.o fftmpi_map.o  fftw3d.o  fft3dlib.o
+
+OBJECTS_O1 += fftw3d.o fftmpi.o fftmpiw.o
+OBJECTS_O2 += fft3dlib.o
+
+# For what used to be vasp.5.lib
+CPP_LIB    = $(CPP)
+FC_LIB     = $(FC)
+CC_LIB     = gcc
+CFLAGS_LIB = -O
+FFLAGS_LIB = -O1
+FREE_LIB   = $(FREE)
+
+OBJECTS_LIB= linpack_double.o getshmem.o
+
+# For the parser library
+CXX_PARS   = g++
+LLIBS      += -lparser -lstdc++
+
+# Normally no need to change this
+SRCDIR     = ../../src
+BINDIR     = ../../bin
