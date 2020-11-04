@@ -1,0 +1,18 @@
+SYSTEM=nickelate
+ICHARG=2
+
+# parameters that determine general accuracy
+PREC = Normal
+ENCUT = 500
+EDIFF = 1e-6
+
+LWAVE  =  .FALSE.
+LCHARG  =  .FALSE.
+
+ISMEAR = 0
+SIGMA = 0.001
+
+# parallelization
+NCORE   = 16
+NSIM   = 4
+KPAR = 2
