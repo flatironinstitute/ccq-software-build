@@ -20,3 +20,4 @@ The following codes are supported:
     * OpenMPI 4, Intel MKL including Scalapack and blacs, FFTW
     * Wannier90 is fully MPI enabled
 * Wannier90 ver 3.1 using the same build chain as Vasp 6.1
+* Quantum Espresso ver 6.6 including w90 (no HDF5 support yet - missing fortran2003 support in HDFlib module)
