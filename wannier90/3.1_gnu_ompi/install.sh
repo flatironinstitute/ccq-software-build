@@ -27,6 +27,12 @@ cp postw90.x wannier90.x libwannier.a ../bin/
 # change module path
 cd ..
 path=`pwd`
-echo $path
+# clear module files first
+rm module
+# place magic module string
+echo '#%Module' > module
+# add module body
+cat src.module >> module
+# add cwd as root dir
 sed -i "s|REPLACEDIR|$path|g" module
 
