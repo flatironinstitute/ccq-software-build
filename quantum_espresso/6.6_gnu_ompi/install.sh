@@ -17,7 +17,7 @@ cd qe
 #-with-hdf5=$HDF5_BASE
 
 # build all
-make all w90
+make all
 
 # change module path
 cd ..

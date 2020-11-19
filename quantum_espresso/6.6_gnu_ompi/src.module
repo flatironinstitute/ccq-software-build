@@ -20,5 +20,5 @@ proc ModulesHelp { } {
 conflict $name intel/mpi intel/compiler
 
 
-module          load    gcc/7.4.0 openmpi4/4.0.5 intel/mkl/2019-3 lib/fftw3/3.3.8-openmpi4
+module          load    gcc/7.4.0 openmpi4/4.0.5 intel/mkl/2019-3  wannier90/3.1_gnu_ompi/module
 prepend-path    PATH    $root/qe/bin
