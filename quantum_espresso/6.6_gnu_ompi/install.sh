@@ -21,7 +21,7 @@ make all
 
 # run tests
 cd test-suite
-make run-tests-parallel
+make run-tests-pw-parallel
 
 # change module path
 cd ../../
