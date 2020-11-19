@@ -19,8 +19,12 @@ cd qe
 # build all
 make all
 
+# run tests
+cd test-suite
+make run-tests-parallel
+
 # change module path
-cd ..
+cd ../../
 path=`pwd`
 # clear module files first
 rm module
