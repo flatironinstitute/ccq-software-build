@@ -1,3 +1,4 @@
+#%Module
 #
 # Module  Quantum Espresso with W90 with GNU MKL  
 #
@@ -6,7 +7,7 @@ set     name        qe
 set     version     6.6_gnu_ompi
 set     root        REPLACEDIR 
 
-set     description "Quantum Espresso ver 6.6 including wannier90 vers3.1 compiled with gnu and openmpi"
+set     description "Quantum Espresso ver 6.6 including wannier90 vers3.1 compiled with MODULES"
 
 module-whatis   "$description"
 
@@ -20,5 +21,5 @@ proc ModulesHelp { } {
 conflict $name intel/mpi intel/compiler
 
 
-module          load    gcc/7.4.0 openmpi4/4.0.5 intel/mkl/2019-3  wannier90/3.1_gnu_ompi/module
-prepend-path    PATH    $root/qe/bin
+module          load    MODULES
+prepend-path    PATH    $root/bin
