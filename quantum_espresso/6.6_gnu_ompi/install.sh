@@ -3,12 +3,12 @@
 # installation script for wannier90 with GNU OpenMPI toolchain
 
 # load modules
-MODULES="gcc/7.4.0 openmpi4/4.0.5 intel/mkl/2019-3 lib/hdf5/1.8.21-openmpi4" 
+MODULES="gcc/7.4.0 openmpi4/4.0.5 intel/mkl/2019-3 lib/hdf5/1.8.21-openmpi4 wannier90/3.1_gnu_ompi/module" 
 module purge
 module load ${MODULES}
 
 BUILDDIR=$(mktemp -d /dev/shm/qe_build_XXXXXXXX)
-INSTALLDIR="$(pwd)/install"
+INSTALLDIR="$(pwd)"
 
 log=build_$(date +%Y%m%d%H%M).log
 testlog="$(pwd)/${log/.log/_test.log}"
@@ -31,7 +31,7 @@ testlog="$(pwd)/${log/.log/_test.log}"
 
     # run tests
     cd test-suite
-    make run-tests-pw-parallel &> ${testlog}
+    #make run-tests-pw-parallel &> ${testlog}
 
     # install it
     cd ..
