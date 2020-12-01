@@ -1,48 +1,51 @@
 #!/bin/bash
+# exit if any of the steps fails
+set -e
 
 # installation script for Vasp +  wannier90 using GNU OpenMPI toolchain
 
 # load modules
+MODULES="gcc/7.4.0 openmpi4/4.0.5 intel/mkl/2019-3 lib/fftw3/3.3.8-openmpi4 wannier90/3.1_gnu_ompi/module"
+
 module purge
-module load gcc/7.4.0 openmpi4/4.0.5 intel/mkl/2019-3 lib/fftw3/3.3.8-openmpi4
+module load ${MODULES}
+
+BUILDDIR=$(mktemp -d /dev/shm/vasp_build_XXXXXXXX)
+INSTALLDIR="$(pwd)"
 
 # export Path for linking
-export libpath=`pwd`
+export libpath=${BUILDDIR}
 
-# first make sure that w90 is compiled and ready
-cwd=`pwd`
-cd ../../wannier90/3.1_gnu_ompi/
-bash install.sh
+log=build_$(date +%Y%m%d%H%M).log
 
-# go back
-cd $cwd
+(
+    cd ${BUILDDIR}
+    
+    # list modules
+    module list
 
-# unpack vasp_src
-mkdir vasp_src
-tar -xvf vasp.6.1.0.tar.gz -C vasp_src
+    # unpack vasp_src
+    tar -xvf ${INSTALLDIR}/vasp.6.1.0.tar.gz
 
-# copy makefile and include wannier lib
-cp makefile.include vasp_src/
-cp ../../wannier90/3.1_gnu_ompi/bin/libwannier.a vasp_src/
+    # copy makefile and include wannier lib
+    cp ${INSTALLDIR}/makefile.include ${BUILDDIR}
+    
+    cp ${INSTALLDIR}/../../wannier90/3.1_gnu_ompi/bin/libwannier.a ${BUILDDIR}
+    
+    # build vasp std gamma version and non-collinear
+    make std gam ncl
 
-cd vasp_src
+    # copy binaries
+    mkdir ${INSTALLDIR}/bin
+    cp bin/* ${INSTALLDIR}/bin 
 
-# build vasp std gamma version and non-collinear
-make std gam ncl
-
-# copy binaries
-mkdir ../bin
-cp bin/* ../bin/
-
-# create module file from template and change module path
-cd ..
-path=`pwd`
-# clear module files first
-rm module
-# place magic module string
+) &> ${log}
+    
+# make the template a proper module 
 echo '#%Module' > module
-# add module body
-cat src.module >> module
-# add cwd as root dir
-sed -i "s|REPLACEDIR|$path|g" module
+# update module template
+sed "s|REPLACEDIR|${INSTALLDIR}|g;s|MODULES|${MODULES}|g" < src.module >> module
+
+# finish up
+echo -e "\nReview ${log} and ${testlog}, move the "'"'module'"'" file to the correct location and then run:\n    rm -rf ${BUILDDIR}.\n"
 
