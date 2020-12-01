@@ -31,7 +31,7 @@ testlog="$(pwd)/${log/.log/_test.log}"
 
     # run tests
     cd test-suite
-    #make run-tests-pw-parallel &> ${testlog}
+    make run-tests-pw-parallel &> ${testlog}
 
     # install it
     cd ..
