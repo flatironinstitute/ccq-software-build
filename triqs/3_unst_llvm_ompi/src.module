@@ -1,0 +1,42 @@
+#
+# Module  Quantum Espresso with W90 with GNU MKL  
+#
+
+set     name        triqs 
+set     version     3_unstable_ompi_mkl
+set     root        REPLACEDIR 
+
+set     description "triqs 3.x unstable release including dfttools cthyb etc" 
+
+module-whatis   "$description"
+
+proc ModulesHelp { } {
+    global description url version git_hash
+    puts stderr "Description: $description"
+    puts stderr "Version:     $version"
+}
+
+# Only one version of triqs can be loaded at a time
+conflict $name intel/mpi intel/compiler
+
+
+module          load    MODULES
+
+setenv CC       clang
+setenv CXX      clang++
+setenv CXXFLAGS "-stdlib=libc++ -Wno-register"
+setenv FC       gfortran
+
+setenv          TRIQS_ROOT          $root
+setenv          TRIQS_VERSION       $version
+setenv          MKL_NUM_THREADS     1
+
+prepend-path    PATH                $root/bin
+prepend-path    CPLUS_INCLUDE_PATH  $root/include
+prepend-path    LIBRARY_PATH        $root/lib
+prepend-path    LD_LIBRARY_PATH     $root/lib
+prepend-path    PYTHONPATH          $root/lib/python3.7/site-packages
+prepend-path    CMAKE_PREFIX_PATH   $root/lib/cmake/triqs
+prepend-path    CMAKE_PREFIX_PATH   $root/lib/cmake/cpp2py
+
+

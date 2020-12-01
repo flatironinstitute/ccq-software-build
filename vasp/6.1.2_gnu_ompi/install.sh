@@ -36,7 +36,7 @@ log=build_$(date +%Y%m%d%H%M).log
     make std gam ncl
 
     # copy binaries
-    mkdir ${INSTALLDIR}/bin
+    mkdir -p ${INSTALLDIR}/bin
     cp bin/* ${INSTALLDIR}/bin 
 
 ) &> ${log}
