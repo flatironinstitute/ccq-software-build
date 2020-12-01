@@ -19,10 +19,11 @@ export MODULEPATH=/path/to/ccq-software-build:$MODULEPATH
 Just exchange the modulepath above with the location of the git repo on your machine. 
 
 The following codes are supported:
+* Wannier90 ver 3.1 using the same build chain as Vasp 6.1
+    * required to build first for Vasp and QE
 * Vasp ver 6.1 linked against Wannier90 ver 3.1
     * OpenMPI 4, Intel MKL including Scalapack and blacs, FFTW
     * Wannier90 is fully MPI enabled
-* Wannier90 ver 3.1 using the same build chain as Vasp 6.1
 * Quantum Espresso ver 6.6 including w90 (no HDF5 support yet - missing fortran2003 support in HDFlib module)
 
 To start just go into one of the software folders provides and just `bash install.sh`.
