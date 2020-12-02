@@ -45,6 +45,7 @@ log=build_$(date +%Y%m%d%H%M).log
     make install
     ################
 
+    cd ${BUILDDIR}
     # install cthyb
     git clone -b unstable https://github.com/TRIQS/cthyb.git cthyb.src 
     # fetch latest changes
@@ -58,6 +59,7 @@ log=build_$(date +%Y%m%d%H%M).log
     make install 
     ################
 
+    cd ${BUILDDIR}
     # install dfttools
     git clone -b unstable https://github.com/TRIQS/dft_tools.git dft_tools.src 
     # fetch latest changes
@@ -71,6 +73,7 @@ log=build_$(date +%Y%m%d%H%M).log
     make install
     ################
     
+    cd ${BUILDDIR}
     # install maxent
     git clone -b unstable https://github.com/TRIQS/maxent.git maxent.src 
     # fetch latest changes
@@ -84,6 +87,7 @@ log=build_$(date +%Y%m%d%H%M).log
     make install
     ################
 
+    cd ${BUILDDIR}
     # install TPRF
     git clone -b unstable https://github.com/TRIQS/tprf.git tprf.src 
     # fetch latest changes
