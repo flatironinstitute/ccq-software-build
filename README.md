@@ -25,6 +25,8 @@ The following codes are supported:
     * OpenMPI 4, Intel MKL including Scalapack and blacs, FFTW
     * Wannier90 is fully MPI enabled
 * Quantum Espresso ver 6.6 including w90 (no HDF5 support yet - missing fortran2003 support in HDFlib module)
+* Elk ver 6.8.4 including wannier90 interface
+    * OpenMPI 4, Intel MKL including Scalapack and blacs, FFTW
 * triqs 3.x.x unstable branch using the same build chain as the above DFT codes
     * includes the triqs applications: cthyb, dfttools, maxent, TPRF
 * ForkTPS 3.x.x unstable, for triqs3 (install triqs3 first)
