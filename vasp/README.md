@@ -5,6 +5,8 @@
 
 this version is build with OpenMPI4, gfortran, and using MKL 2019 libraries. Moreover, wannier90 is linked into it automatically. If using on skylake one needs to use the module `openmpi4/4.0.5-opa` instead of `openmpi4/4.0.5`. 
 
+You need a valid Vasp version / license to use this installation script. Please add the required vasp*.tgz manually to the directory.
+
 Some benchmark results of this version (timing from cpu time LOOP+ in OUTCAR):
 
 | #nodes | ranks per node | type    | NCORE | KPAR | time (sec)   | speedup |

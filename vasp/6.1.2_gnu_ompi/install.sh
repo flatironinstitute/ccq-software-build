@@ -13,8 +13,10 @@ module load ${MODULES}
 BUILDDIR=$(mktemp -d /dev/shm/vasp_build_XXXXXXXX)
 INSTALLDIR="$(pwd)"
 
+VASPFILE="vasp.6.1.2_patched"
+
 # export Path for linking
-export libpath=${BUILDDIR}
+export libpath=${BUILDDIR}/${VASPFILE}
 
 log=build_$(date +%Y%m%d%H%M).log
 
@@ -25,15 +27,21 @@ log=build_$(date +%Y%m%d%H%M).log
     module list
 
     # unpack vasp_src
-    tar -xvf ${INSTALLDIR}/vasp.6.1.0.tar.gz
+    tar -xvf ${INSTALLDIR}/${VASPFILE}.tgz
+    cd ${VASPFILE}
 
     # copy makefile and include wannier lib
-    cp ${INSTALLDIR}/makefile.include ${BUILDDIR}
+    cp ${INSTALLDIR}/makefile.include ${BUILDDIR}/${VASPFILE}
     
-    cp ${INSTALLDIR}/../../wannier90/3.1_gnu_ompi/bin/libwannier.a ${BUILDDIR}
+    cp ${INSTALLDIR}/../../wannier90/3.1_gnu_ompi/bin/libwannier.a ${BUILDDIR}/${VASPFILE}
     
     # build vasp std gamma version and non-collinear
     make std gam ncl
+
+    export VASP_TESTSUITE_EXE_STD="mpirun -np 12 ${BUILDDIR}/${VASPFILE}/bin/vasp_std"
+    export VASP_TESTSUITE_EXE_GAM="mpirun -np 12 ${BUILDDIR}/${VASPFILE}/bin/vasp_gam"
+    export VASP_TESTSUITE_EXE_NCL="mpirun -np 12 ${BUILDDIR}/${VASPFILE}/bin/vasp_ncl"
+    make test
 
     # copy binaries
     mkdir -p ${INSTALLDIR}/bin

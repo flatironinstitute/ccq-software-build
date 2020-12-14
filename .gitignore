@@ -1,1 +1,5 @@
-module
+module*
+bin
+installation
+species
+vasp*.tgz
