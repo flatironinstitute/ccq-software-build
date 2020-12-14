@@ -20,6 +20,6 @@ proc ModulesHelp { } {
 conflict $name intel/mpi intel/compiler
 
 
-module          load    MODULE 
+module          load    MODULES
 
 prepend-path    PATH    $root/bin

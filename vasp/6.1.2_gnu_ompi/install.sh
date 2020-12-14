@@ -5,7 +5,7 @@ set -e
 # installation script for Vasp +  wannier90 using GNU OpenMPI toolchain
 
 # load modules
-MODULES="gcc/7.4.0 openmpi4/4.0.5 intel/mkl/2019-3 lib/fftw3/3.3.8-openmpi4 wannier90/3.1_gnu_ompi/module"
+MODULES="gcc/7.4.0 openmpi4/4.0.5 intel/mkl/2019-3 lib/fftw3/3.3.8-openmpi4 wannier90/3.1_gnu_ompi/module-rome"
 
 module purge
 module load ${MODULES}
@@ -42,9 +42,15 @@ log=build_$(date +%Y%m%d%H%M).log
 ) &> ${log}
     
 # make the template a proper module 
-echo '#%Module' > module
+echo '#%Module' > module-rome
 # update module template
-sed "s|REPLACEDIR|${INSTALLDIR}|g;s|MODULES|${MODULES}|g" < src.module >> module
+sed "s|REPLACEDIR|${INSTALLDIR}|g;s|MODULES|${MODULES}|g" < src.module >> module-rome
+
+# Skylake module
+# make the template a proper module 
+echo '#%Module' > module-skylake
+# update module template
+sed "s|REPLACEDIR|${INSTALLDIR}|g;s|MODULES|${MODULES}|g;s|openmpi4/4.0.5|openmpi4/4.0.5-opa|g;s|module-rome|module-skylake|g" < src.module >> module-skylake
 
 # finish up
 echo -e "\nReview ${log} and ${testlog}, move the "'"'module'"'" file to the correct location and then run:\n    rm -rf ${BUILDDIR}.\n"

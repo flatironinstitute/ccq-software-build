@@ -37,10 +37,17 @@ testlog="$(pwd)/${log/.log/_test.log}"
 echo "Last 20 lines of test ouput:"
 tail -20 ${testlog}
 
-# make the template a proper module by placing the magic string
-echo '#%Module' > module
+# make the template a proper module 
+echo '#%Module' > module-rome
 # update module template
-sed "s|REPLACEDIR|${INSTALLDIR}|g;s|MODULES|${MODULES}|g" < src.module >> module
+sed "s|REPLACEDIR|${INSTALLDIR}|g;s|MODULES|${MODULES}|g" < src.module >> module-rome
+
+# Skylake module
+# make the template a proper module 
+echo '#%Module' > module-skylake
+# update module template
+sed "s|REPLACEDIR|${INSTALLDIR}|g;s|MODULES|${MODULES}|g;s|openmpi4/4.0.5|openmpi4/4.0.5-opa|g" < src.module >> module-skylake
+
 
 # finish up
 echo -e "\nReview ${log} and ${testlog}, move the "'"'module'"'" file to the correct location and then run:\n    rm -rf ${BUILDDIR}.\n"
