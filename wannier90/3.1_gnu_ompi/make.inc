@@ -8,7 +8,7 @@ F90 = gfortran -m64 -I${MKLROOT}/include
 COMMS  = mpi 
 MPIF90 = mpif90 -m64 -I${MKLROOT}/include 
 
-FCOPTS = -O3 
+FCOPTS = -O3 -march=broadwell
 LDOPTS =
 
 LIBS = -L${MKLROOT}/lib/intel64 -Wl,--no-as-needed -lmkl_scalapack_lp64 -lmkl_gf_lp64 -lmkl_sequential -lmkl_core -lmkl_blacs_openmpi_lp64 -lpthread -lm -ldl

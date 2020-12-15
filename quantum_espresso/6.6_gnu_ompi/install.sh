@@ -7,6 +7,9 @@ MODULES="gcc/7.4.0 openmpi4/4.0.5 intel/mkl/2019-3 lib/hdf5/1.8.21-openmpi4 wann
 module purge
 module load ${MODULES}
 
+export CFLAGS="-O3 -march=broadwell"
+export FFLAGS="-O3 -g -march=broadwell"
+
 BUILDDIR=$(mktemp -d /dev/shm/qe_build_XXXXXXXX)
 INSTALLDIR="$(pwd)"
 

@@ -17,6 +17,7 @@ INSTALLDIR="$(pwd)"
 export libpath=${BUILDDIR}
 
 log=build_$(date +%Y%m%d%H%M).log
+testlog="$(pwd)/${log/.log/_test.log}"
 
 (
     cd ${BUILDDIR}
@@ -37,8 +38,8 @@ log=build_$(date +%Y%m%d%H%M).log
     make all 
 
     # run tests
-    make test
-    make test-mpi
+    make test &> ${testlog}
+    make test-mpi &> ${testlog}
 
     # copy binaries
     mkdir -p ${INSTALLDIR}/bin
@@ -59,3 +60,7 @@ sed "s|REPLACEDIR|${INSTALLDIR}|g;s|MODULES|${MODULES}|g" < src.module >> module
 echo '#%Module' > module-skylake
 # update module template
 sed "s|REPLACEDIR|${INSTALLDIR}|g;s|MODULES|${MODULES}|g;s|openmpi4/4.0.5|openmpi4/4.0.5-opa|g;s|module-rome|module-skylake|g" < src.module >> module-skylake
+
+# finish up
+echo -e "\nReview ${log} and ${testlog}, move the "'"'module'"'" file to the correct location and then run:\n    rm -rf ${BUILDDIR}.\n"
+

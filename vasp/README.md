@@ -17,6 +17,7 @@ Some benchmark results of this version (timing from cpu time LOOP+ in OUTCAR):
 | 1      | 128            | rome    | 8     | 1    | 746.4        | 4.60    |
 | 1      | 128            | rome    | 16    | 1    | 642.1        | 5.35    |
 | 1      | 128            | rome    | 16    | 2    | 534.9        | 6.42    |
+| 1      | 128            | rome AVX| 16    | 2    | 527.4        | 6.51    |
 | 1      | 128            | rome    | 8     | 4    | 593.7        |  5.79   |
 | 3      | 120            | skylake | 5     | 3    | 442.9        | 7.76    |
 | 4      | 160            | skylake | 5     | 4    | 351.5        | 9.77    |

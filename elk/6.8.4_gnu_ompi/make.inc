@@ -1,7 +1,7 @@
 
 MAKE = make
-F90_OPTS = -O3 -funroll-loops -ffast-math -fopenmp -m64 -I${MKLROOT}/include
-F77_OPTS = -O3 -funroll-loops -ffast-math -fopenmp -m64 -I${MKLROOT}/include
+F90_OPTS = -O3 -funroll-loops -ffast-math -fopenmp -m64 -march=broadwell -I${MKLROOT}/include
+F77_OPTS = -O3 -funroll-loops -ffast-math -fopenmp -m64 -march=broadwell -I${MKLROOT}/include
 AR = ar
 LIB_SYS = 
 SRC_OMP = 

@@ -19,6 +19,7 @@ VASPFILE="vasp.6.1.2_patched"
 export libpath=${BUILDDIR}/${VASPFILE}
 
 log=build_$(date +%Y%m%d%H%M).log
+testlog="$(pwd)/${log/.log/_test.log}"
 
 (
     cd ${BUILDDIR}
@@ -41,7 +42,7 @@ log=build_$(date +%Y%m%d%H%M).log
     export VASP_TESTSUITE_EXE_STD="mpirun -np 12 ${BUILDDIR}/${VASPFILE}/bin/vasp_std"
     export VASP_TESTSUITE_EXE_GAM="mpirun -np 12 ${BUILDDIR}/${VASPFILE}/bin/vasp_gam"
     export VASP_TESTSUITE_EXE_NCL="mpirun -np 12 ${BUILDDIR}/${VASPFILE}/bin/vasp_ncl"
-    make test
+    make test &> ${testlog}
 
     # copy binaries
     mkdir -p ${INSTALLDIR}/bin

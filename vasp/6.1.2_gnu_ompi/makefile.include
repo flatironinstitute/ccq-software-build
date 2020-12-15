@@ -20,7 +20,7 @@ FREE       = -ffree-form -ffree-line-length-none
 
 FFLAGS     = -w
 
-OFLAG      = -O3
+OFLAG      = -O3 -march=broadwell
 OFLAG_IN   = $(OFLAG)
 DEBUG      = -O0
 
