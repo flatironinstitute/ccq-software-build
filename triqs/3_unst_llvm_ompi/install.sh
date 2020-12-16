@@ -9,7 +9,7 @@ module load ${MODULES}
 
 export CC=clang
 export CXX=clang++
-export CXXFLAGS="-stdlib=libc++ -Wno-register"
+export CXXFLAGS="-stdlib=libc++ -Wno-register -march=broadwell"
 export FC=gfortran
 
 mkdir -p /dev/shm/triqs3_unstable_build
@@ -29,8 +29,19 @@ export CMAKE_PREFIX_PATH=${INSTALLDIR}/lib/cmake/cpp2py:$CMAKE_PREFIX_PATH
 log=build_$(date +%Y%m%d%H%M).log
 (
     cd ${BUILDDIR}
-    
+
     module list
+
+    # first install numpy and scipy with MKL libs
+    # Numpy
+    git clone --branch v1.17.5 https://github.com/numpy/numpy.git numpy
+    cd numpy 
+    python3 setup.py build -j 12 install --prefix ${INSTALLDIR}
+
+    # Scipy
+    git clone --branch v1.2.3 https://github.com/scipy/scipy.git scipy
+    cd scipy 
+    python3 setup.py build -j 12 install --prefix ${INSTALLDIR}
 
     # install triqs
     git clone -b unstable https://github.com/TRIQS/triqs triqs.src 
@@ -38,7 +49,7 @@ log=build_$(date +%Y%m%d%H%M).log
     cd triqs.src && git pull && cd ..
     mkdir -p triqs.build && cd triqs.build
     
-    cmake ../triqs.src -DCMAKE_INSTALL_PREFIX=${INSTALLDIR} -DBuild_Deps=Always -DBLAS_LIBRARIES="-Wl,--start-group ${MKLROOT}/lib/intel64/libmkl_intel_lp64.a ${MKLROOT}/lib/intel64/libmkl_gnu_thread.a ${MKLROOT}/lib/intel64/libmkl_core.a -Wl,--end-group -lgomp -lpthread -lm -ldl" -DCMAKE_CXX_FLAGS="-m64 -I${MKLROOT}/include -stdlib=libc++ -Wno-register -fopenmp" -DFFTW_LIBRARIES="${FFTW3_BASE}/lib/libfftw3_mpi.so" -DGMP_LIBRARIES="${GMP_BASE}/lib/libgmp.so"
+    cmake ../triqs.src -DCMAKE_INSTALL_PREFIX=${INSTALLDIR} -DBuild_Deps=Always -DBLAS_LIBRARIES="-Wl,--start-group ${MKLROOT}/lib/intel64/libmkl_intel_lp64.a ${MKLROOT}/lib/intel64/libmkl_gnu_thread.a ${MKLROOT}/lib/intel64/libmkl_core.a -Wl,--end-group -lgomp -lpthread -lm -ldl" -DCMAKE_CXX_FLAGS="-m64 -march=broadwell -I${MKLROOT}/include -stdlib=libc++ -Wno-register -fopenmp" -DFFTW_LIBRARIES="${FFTW3_BASE}/lib/libfftw3_mpi.so" -DGMP_LIBRARIES="${GMP_BASE}/lib/libgmp.so"
     # make / test / install    
     make -j10 
     ctest -j10 

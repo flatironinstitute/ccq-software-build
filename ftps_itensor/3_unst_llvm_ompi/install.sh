@@ -3,7 +3,7 @@
 # installation script for itensor and FTPS building on top of triqs
 
 # load modules
-MODULES="triqs/3_unst_llvm_ompi/module"
+MODULES="triqs/3_unst_llvm_ompi/module-rome"
 module purge
 module load ${MODULES}
 
