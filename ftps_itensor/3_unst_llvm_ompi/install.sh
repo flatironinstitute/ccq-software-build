@@ -56,7 +56,13 @@ log=build_$(date +%Y%m%d%H%M).log
 ) &> ${log}
 
 # make the template a proper module 
-echo '#%Module' > module
+echo '#%Module' > module-rome
 # update module template
-sed "s|REPLACEDIR|${INSTALLDIR}|g;s|MODULES|${MODULES}|g" < src.module >> module
+sed "s|REPLACEDIR|${INSTALLDIR}|g;s|MODULES|${MODULES}|g" < src.module >> module-rome
+
+# Skylake module
+# make the template a proper module 
+echo '#%Module' > module-skylake
+# update module template
+sed "s|REPLACEDIR|${INSTALLDIR}|g;s|MODULES|${MODULES}|g;s|openmpi4/4.0.5|openmpi4/4.0.5-opa|g" < src.module >> module-skylake
 
