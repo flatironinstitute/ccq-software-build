@@ -24,10 +24,7 @@ testlog="$(pwd)/${log/.log/_test.log}"
     git clone -b qe-6.6 https://github.com/QEF/q-e.git qe
     cd qe
     
-    ./configure -enable-parallel=yes -with-scalapack=yes -prefix=${INSTALLDIR}
-
-    # HDF does not work yet as HDF is not compiled with -enable-fortran2003, and -enable-parallel
-    #-with-hdf5=$HDF5_BASE
+    ./configure -enable-parallel=yes -with-scalapack=yes -with-hdf5=$HDF5_BASE -prefix=${INSTALLDIR}
 
     # build all
     make -j 10 all
