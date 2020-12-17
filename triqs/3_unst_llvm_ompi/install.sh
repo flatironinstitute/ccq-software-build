@@ -9,6 +9,7 @@ module load ${MODULES}
 
 export CC=clang
 export CXX=clang++
+export CFLAGS="-march=broadwell"
 export CXXFLAGS="-stdlib=libc++ -Wno-register -march=broadwell"
 export FC=gfortran
 
@@ -36,14 +37,22 @@ log=build_$(date +%Y%m%d%H%M).log
     # Numpy
     git clone --branch v1.17.5 https://github.com/numpy/numpy.git numpy
     cd numpy 
-    python3 setup.py build -j 12 install --prefix ${INSTALLDIR}
+    echo '[mkl]' > site.cfg
+    echo 'mkl_libs = mkl_def, mkl_gf_lp64, mkl_core, mkl_sequential' >> site.cfg
+    echo 'lapack_libs = mkl_def, mkl_gf_lp64, mkl_core, mkl_sequential' >> site.cfg
+    python3 setup.py build -j 10 install --prefix ${INSTALLDIR}
 
     # Scipy
+    cd ${BUILDDIR}
     git clone --branch v1.2.3 https://github.com/scipy/scipy.git scipy
     cd scipy 
-    python3 setup.py build -j 12 install --prefix ${INSTALLDIR}
+    echo '[mkl]' > site.cfg
+    echo 'mkl_libs = mkl_def, mkl_gf_lp64, mkl_core, mkl_sequential' >> site.cfg
+    echo 'lapack_libs = mkl_def, mkl_gf_lp64, mkl_core, mkl_sequential' >> site.cfg
+    python3 setup.py build -j 10 install --prefix ${INSTALLDIR}
 
     # install triqs
+    cd ${BUILDDIR}
     git clone -b unstable https://github.com/TRIQS/triqs triqs.src 
     # fetch latest changes
     cd triqs.src && git pull && cd ..
