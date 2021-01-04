@@ -34,7 +34,7 @@ testlog="$(pwd)/${log/.log/_test.log}"
     # copy makefile and include wannier lib
     cp ${INSTALLDIR}/makefile.include ${BUILDDIR}/${VASPFILE}
     
-    cp ${INSTALLDIR}/../../wannier90/3.1_gnu_ompi/bin/libwannier.a ${BUILDDIR}/${VASPFILE}
+    cp ${INSTALLDIR}/../../wannier90/3.1_gnu_ompi/bin/libwannier_seq.a ${BUILDDIR}/${VASPFILE}
     
     # build vasp std gamma version and non-collinear
     make std gam ncl
