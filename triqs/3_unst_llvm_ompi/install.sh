@@ -119,7 +119,21 @@ log=build_$(date +%Y%m%d%H%M).log
     make -j10 
     ctest -j10 
     make install
+    ################
 
+    cd ${BUILDDIR}
+    # install hubbardI
+    git clone -b unstable https://github.com/TRIQS/hubbardI.git hubbardI.src 
+    # fetch latest changes
+    cd hubbardI.src && git pull && cd ..
+    mkdir -p hubbardI.build && cd hubbardI.build
+
+    cmake ../hubbardI.src
+    # make / test / install    
+    make -j10 
+    ctest -j4 
+    make install 
+    ################
 ) &> ${log}
 
 # make the template a proper module 
