@@ -1,0 +1,24 @@
+#
+# w2dynamics_interface to use with triqs  
+#
+
+set     name        w2dynamics_interface
+set     version     3_unstable_ompi_mkl
+set     root        REPLACEDIR 
+
+set     description "w2dynamics_interface on top of triqs 3" 
+
+module-whatis   "$description"
+
+proc ModulesHelp { } {
+    global description url version git_hash
+    puts stderr "Description: $description"
+    puts stderr "Version:     $version"
+}
+
+# Only one version of triqs can be loaded at a time
+conflict $name intel/mpi intel/compiler
+
+
+module          load    MODULES
+
