@@ -15,7 +15,7 @@ export FC=gfortran
 
 mkdir -p /dev/shm/triqs3_unstable_build
 BUILDDIR="/dev/shm/triqs3_unstable_build"
-mkdir -p installation
+mkdir -p installation/lib/python3.7/site-packages
 INSTALLDIR="$(pwd)/installation"
 
 export TRIQS_ROOT=${INSTALLDIR}
