@@ -32,10 +32,13 @@ log=build_$(date +%Y%m%d%H%M).log
     cd ${BUILDDIR}
 
     module list
+    
+    # make sure cython is up to date
+    pip3 install --user --upgrade cython pybind11
 
     # first install numpy and scipy with MKL libs
-    # Numpy
-    git clone --branch v1.17.5 https://github.com/numpy/numpy.git numpy
+     Numpy
+    git clone https://github.com/numpy/numpy.git numpy
     cd numpy 
     echo '[mkl]' > site.cfg
     echo 'mkl_libs = mkl_def, mkl_gf_lp64, mkl_core, mkl_sequential' >> site.cfg
@@ -44,7 +47,7 @@ log=build_$(date +%Y%m%d%H%M).log
 
     # Scipy
     cd ${BUILDDIR}
-    git clone --branch v1.2.3 https://github.com/scipy/scipy.git scipy
+    git clone https://github.com/scipy/scipy.git scipy
     cd scipy 
     echo '[mkl]' > site.cfg
     echo 'mkl_libs = mkl_def, mkl_gf_lp64, mkl_core, mkl_sequential' >> site.cfg
