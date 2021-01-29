@@ -1,13 +1,12 @@
 #!/bin/bash
 
-# installation script for wannier90 with GNU OpenMPI toolchain
+# installation script for QE with GNU OpenMPI toolchain
 
 # load modules
 MODULES="gcc/7.4.0 openmpi4/4.0.5 intel/mkl/2019-3 lib/hdf5/1.8.21-openmpi4 wannier90/3.1_gnu_ompi/module-rome" 
 module purge
 module load ${MODULES}
 
-export CFLAGS="-O3 -march=broadwell"
 export FFLAGS="-O3 -g -march=broadwell"
 
 BUILDDIR=$(mktemp -d /dev/shm/qe_build_XXXXXXXX)
@@ -20,10 +19,10 @@ testlog="$(pwd)/${log/.log/_test.log}"
     
     module list
 
-    # clone version 6.6 from github
-    git clone -b qe-6.6 https://github.com/QEF/q-e.git qe
+    # clone version 6.7 from github
+    git clone -b qe-6.7.0 https://github.com/QEF/q-e.git qe
     cd qe
-    
+
     # scalapack can in rare cases lead to MPI segfaults in MKL routines! If that happens
     # turn off scalapack here and recompile. 
     # these errors can be cured by appropriate settings for parralleziation flags
