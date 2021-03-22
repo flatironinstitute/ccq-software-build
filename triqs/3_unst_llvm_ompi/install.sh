@@ -61,7 +61,7 @@ log=build_$(date +%Y%m%d%H%M).log
     cd triqs.src && git pull && cd ..
     mkdir -p triqs.build && cd triqs.build
     
-    cmake ../triqs.src -DCMAKE_INSTALL_PREFIX=${INSTALLDIR} -DBuild_Deps=Always -DBLAS_LIBRARIES="-Wl,--start-group ${MKLROOT}/lib/intel64/libmkl_intel_lp64.a ${MKLROOT}/lib/intel64/libmkl_gnu_thread.a ${MKLROOT}/lib/intel64/libmkl_core.a -Wl,--end-group -lgomp -lpthread -lm -ldl" -DCMAKE_CXX_FLAGS="-m64 -march=broadwell -I${MKLROOT}/include -stdlib=libc++ -Wno-register -fopenmp" -DFFTW_LIBRARIES="${FFTW3_BASE}/lib/libfftw3_mpi.so" -DGMP_LIBRARIES="${GMP_BASE}/lib/libgmp.so"
+    cmake ../triqs.src -DCMAKE_INSTALL_PREFIX=${INSTALLDIR} -DBuild_Deps=Always -DBLAS_LIBRARIES="-Wl,--start-group ${MKLROOT}/lib/intel64/libmkl_intel_lp64.a ${MKLROOT}/lib/intel64/libmkl_gnu_thread.a ${MKLROOT}/lib/intel64/libmkl_core.a -Wl,--end-group -lgomp -lpthread -lm -ldl" -DCMAKE_CXX_FLAGS="-m64 -march=broadwell -I${MKLROOT}/include -stdlib=libc++ -Wno-register -fopenmp"
     # make / test / install    
     make -j10 
     ctest -j10 
