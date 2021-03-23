@@ -12,7 +12,7 @@
 ## Clang compiler (good to use on macOS)
 ## Note: try this if you have trouble compiling 
 ##       with g++ on macOS Mojave 10.14
-CCCOM=clang++ -std=c++17 -stdlib=libc++ -fPIC -Wno-gcc-compat -fopenmp
+CCCOM=clang++ -std=c++17 -stdlib=libc++ -fPIC -Wno-gcc-compat 
 
 ## GCC On Windows cygwin
 ## Extra flags are workaround for limitations
@@ -69,9 +69,9 @@ CCCOM=clang++ -std=c++17 -stdlib=libc++ -fPIC -Wno-gcc-compat -fopenmp
 
 PLATFORM=mkl
 ## MKL example - you may need to change the names of the folders below
-BLAS_LAPACK_LIBFLAGS=-Wl,--start-group ${MKLROOT}/lib/intel64/libmkl_intel_lp64.a ${MKLROOT}/lib/intel64/libmkl_sequential.a ${MKLROOT}/lib/intel64/libmkl_core.a -Wl,--end-group -lpthread -lm -ldl
+#BLAS_LAPACK_LIBFLAGS=-Wl,--start-group ${MKLROOT}/lib/intel64/libmkl_intel_lp64.a ${MKLROOT}/lib/intel64/libmkl_sequential.a ${MKLROOT}/lib/intel64/libmkl_core.a -Wl,--end-group -lpthread -lm -ldl
 BLAS_LAPACK_INCLUDEFLAGS=-I${MKLROOT}/include
-#BLAS_LAPACK_LIBFLAGS=-L/opt/intel/mkl/lib/intel64 -lmkl_intel_lp64 -lmkl_intel_thread -lmkl_rt -lmkl_core -liomp5 -lpthread
+BLAS_LAPACK_LIBFLAGS=-L${MKLROOT}/lib/intel64 -Wl,--no-as-needed -lmkl_intel_lp64 -lmkl_sequential -lmkl_core -lpthread -lm -ldl
 ## Example of using a sequential version of MKL. You may want to link to 
 ## the sequential version of MKL if you are using ITensor's native multithreading, 
 ## see section [4] for more details.
@@ -168,7 +168,7 @@ DEBUGFLAGS=-DDEBUG -g -Wall -Wno-unknown-pragmas -pedantic
 ## These can be faster to link and give smaller binary sizes
 ## You may need to set you LD_LIBRARY_PATH to include the ITensor lib/
 ## folder in order to link with the dynamic libraries
-ITENSOR_MAKE_DYLIB=0
+ITENSOR_MAKE_DYLIB=1
 
 
 ###

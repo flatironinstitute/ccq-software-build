@@ -3,14 +3,14 @@
 # installation script for triqs3 unstable branch with GNU OpenMPI toolchain
 
 # load modules
-MODULES="gcc/7.4.0 llvm/10.0.0 intel/mkl/2019-3 openmpi4/4.0.5 python3/3.7.3 python3-mpi4py/3.7.3-openmpi4 lib/boost/1.70-gcc7 cmake/3.14.5 gdb/8.2 valgrind/3.15.0 lib/hdf5/1.8.21-openmpi4 lib/fftw3/3.3.8-openmpi4 lib/NFFT/3.4.0 lib/gmp/6.1.2"
+MODULES="gcc/7.4.0 llvm/11.0.0 intel/mkl/2019-3 openmpi4/4.0.5 python3/3.7.3 python3-mpi4py/3.7.3-openmpi4 lib/boost/1.70-gcc7 cmake/3.19.1 gdb/8.2 valgrind/3.15.0 lib/hdf5/1.8.21-openmpi4 lib/fftw3/3.3.8-openmpi4 lib/NFFT/3.4.0 lib/gmp/6.1.2"
 module purge
 module load ${MODULES}
 
 export CC=clang
 export CXX=clang++
 export CFLAGS="-march=broadwell"
-export CXXFLAGS="-stdlib=libc++ -Wno-register -march=broadwell"
+export CXXFLAGS="-m64 -stdlib=libc++ -Wno-register -march=broadwell -I${MKLROOT}/include"
 export FC=gfortran
 
 mkdir -p /dev/shm/triqs3_unstable_build
@@ -34,20 +34,27 @@ log=build_$(date +%Y%m%d%H%M).log
     module list
     
     # make sure cython is up to date
-    pip3 install --user --upgrade cython pybind11
+    pip3 install --upgrade --target ${INSTALLDIR}/lib/python3.7/site-packages cython pybind11 gast 
 
     # first install numpy and scipy with MKL libs
-     Numpy
-    git clone https://github.com/numpy/numpy.git numpy
+    # Numpy
+    git clone --branch=v1.20.1 https://github.com/numpy/numpy.git numpy
     cd numpy 
     echo '[mkl]' > site.cfg
     echo 'mkl_libs = mkl_def, mkl_gf_lp64, mkl_core, mkl_sequential' >> site.cfg
     echo 'lapack_libs = mkl_def, mkl_gf_lp64, mkl_core, mkl_sequential' >> site.cfg
+    python3 setup.py build -j 10 install --prefix ${INSTALLDIR} 
+    
+    # install pythran for modern scipy / numpy
+    git clone --branch=0.9.8 https://github.com/serge-sans-paille/pythran.git pythran
+    cd pythran
+    sed -i "s|blas=blas|blas=mkl|g" pythran/pythran-linux.cfg 
+    sed -i "s|blas=blas|blas=mkl|g" pythran/pythran-linux2.cfg 
     python3 setup.py build -j 10 install --prefix ${INSTALLDIR}
 
     # Scipy
     cd ${BUILDDIR}
-    git clone https://github.com/scipy/scipy.git scipy
+    git clone --branch=v1.6.1 https://github.com/scipy/scipy.git scipy
     cd scipy 
     echo '[mkl]' > site.cfg
     echo 'mkl_libs = mkl_def, mkl_gf_lp64, mkl_core, mkl_sequential' >> site.cfg
@@ -61,7 +68,7 @@ log=build_$(date +%Y%m%d%H%M).log
     cd triqs.src && git pull && cd ..
     mkdir -p triqs.build && cd triqs.build
     
-    cmake ../triqs.src -DCMAKE_INSTALL_PREFIX=${INSTALLDIR} -DBuild_Deps=Always -DBLAS_LIBRARIES="-Wl,--start-group ${MKLROOT}/lib/intel64/libmkl_intel_lp64.a ${MKLROOT}/lib/intel64/libmkl_gnu_thread.a ${MKLROOT}/lib/intel64/libmkl_core.a -Wl,--end-group -lgomp -lpthread -lm -ldl" -DCMAKE_CXX_FLAGS="-m64 -march=broadwell -I${MKLROOT}/include -stdlib=libc++ -Wno-register -fopenmp"
+    cmake ../triqs.src -DCMAKE_INSTALL_PREFIX=${INSTALLDIR} -DBuild_Deps=Always -DBLA_VENDOR=Intel10_64lp_seq 
     # make / test / install    
     make -j10 
     ctest -j10 
