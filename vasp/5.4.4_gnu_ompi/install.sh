@@ -10,7 +10,7 @@ MODULES="gcc/7.4.0 openmpi4/4.0.5 intel/mkl/2019-3 lib/fftw3/3.3.8-openmpi4 wann
 module purge
 module load ${MODULES}
 
-BUILDDIR=$(mktemp -d /dev/shm/vasp_build_XXXXXXXX)
+BUILDDIR=$(mktemp -d /dev/shm/vasp5_build_XXXXXXXX)
 INSTALLDIR="$(pwd)"
 
 VASPFILE="vasp_544.tar.gz"
