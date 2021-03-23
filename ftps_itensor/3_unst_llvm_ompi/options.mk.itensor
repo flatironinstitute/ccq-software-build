@@ -12,7 +12,7 @@
 ## Clang compiler (good to use on macOS)
 ## Note: try this if you have trouble compiling 
 ##       with g++ on macOS Mojave 10.14
-CCCOM=clang++ -std=c++17 -stdlib=libc++ -fPIC -Wno-gcc-compat 
+CCCOM=clang++ -std=c++17 -stdlib=libc++ -fPIC -Wno-gcc-compat -fopenmp 
 
 ## GCC On Windows cygwin
 ## Extra flags are workaround for limitations
