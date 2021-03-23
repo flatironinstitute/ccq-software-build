@@ -45,7 +45,7 @@ log=build_$(date +%Y%m%d%H%M).log
     cd forktps.src && git pull && cd ..
     mkdir -p forktps.build && cd forktps.build
 
-    cmake ../forktps.src
+    cmake ../forktps.src -DBUILD_SHARED_LIBS=ON
     # make / test / install    
     make -j10 
     make test
