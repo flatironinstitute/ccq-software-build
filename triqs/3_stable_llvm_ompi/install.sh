@@ -34,7 +34,7 @@ log=build_$(date +%Y%m%d%H%M).log
     module list
     
     # make sure cython is up to date
-    pip3 install --upgrade --target ${INSTALLDIR}/lib/python3.7/site-packages cython pythran pybind11 gast 
+    pip3 install --upgrade --target ${INSTALLDIR}/lib/python3.7/site-packages cython pybind11 gast 
 
     # first install numpy and scipy with MKL libs
     # Numpy

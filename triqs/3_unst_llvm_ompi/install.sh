@@ -44,15 +44,11 @@ log=build_$(date +%Y%m%d%H%M).log
     echo 'mkl_libs = mkl_def, mkl_gf_lp64, mkl_core, mkl_sequential' >> site.cfg
     echo 'lapack_libs = mkl_def, mkl_gf_lp64, mkl_core, mkl_sequential' >> site.cfg
     python3 setup.py build -j 10 install --prefix ${INSTALLDIR} 
-    
-    # install pythran for modern scipy / numpy
-    git clone --branch=0.9.8 https://github.com/serge-sans-paille/pythran.git pythran
-    cd pythran
-    sed -i "s|blas=blas|blas=mkl|g" pythran/pythran-linux.cfg 
-    sed -i "s|blas=blas|blas=mkl|g" pythran/pythran-linux2.cfg 
-    python3 setup.py build -j 10 install --prefix ${INSTALLDIR}
 
     # Scipy
+    # if scipy has a problem using the wrong cython, this is because pythran is installed with the wrong cython!
+    # error: wrong number of arguments
+    # to solve pip3 uninstall pythran and then install again
     cd ${BUILDDIR}
     git clone --branch=v1.6.1 https://github.com/scipy/scipy.git scipy
     cd scipy 
