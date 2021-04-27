@@ -3,7 +3,7 @@
 # installation script for itensor and FTPS building on top of triqs
 
 # load modules
-MODULES="triqs/3_unst_llvm_ompi/module-rome"
+MODULES="triqs/3_stable_llvm_ompi/module-rome"
 module purge
 module load ${MODULES}
 
@@ -13,8 +13,8 @@ export CXXFLAGS="-stdlib=libc++ -Wno-register"
 export FC=gfortran
 
 
-mkdir -p /dev/shm/triqs3_unstable_build
-BUILDDIR="/dev/shm/triqs3_unstable_build"
+mkdir -p /dev/shm/triqs3_stable_build
+BUILDDIR="/dev/shm/triqs3_stable_build"
 mkdir -p installation
 INSTALLDIR="$(pwd)/installation"
 
