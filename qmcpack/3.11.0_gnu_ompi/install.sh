@@ -46,9 +46,10 @@ tail -20 ${testlog}
 
 # install binaries and scripts
 mkdir bin
-cp -r ${BUILDDIR}/$NVER/cpu_comp/bin bin/cpu_comp
-cp -r ${BUILDDIR}/$NVER/nexus .
-cp -r ${BUILDDIR}/$NVER/utils .
+rsync -az ${BUILDDIR}/$NVER/cpu_comp/bin bin/cpu_comp
+rsync -az ${BUILDDIR}/$NVER/nexus .
+rm -rf nexus/tests  # something in here messes with Modules
+rsync -az ${BUILDDIR}/$NVER/utils .
 (
   cd bin
   ln -s cpu_comp/qmcpack qmcpack_cpu_comp
