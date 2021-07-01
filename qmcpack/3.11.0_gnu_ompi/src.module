@@ -1,0 +1,16 @@
+set     pkg         REPLACE_NAME
+set     version     REPLACE_VERSION
+set     root        REPLACEDIR 
+
+proc ModulesHelp { } {
+    puts stderr "Sets the environment for $pkg-$version"
+}
+
+module-whatis   "Sets the environment for $pkg-$version"
+
+conflict $pkg intel/mpi intel/compiler
+
+module                  load  MODULES
+prepend-path            PATH  $root/bin
+prepend-path  PYTHONPATHPATH  $root/nexus/lib
+prepend-path  PYTHONPATHPATH  $root/utils/afqmctools
