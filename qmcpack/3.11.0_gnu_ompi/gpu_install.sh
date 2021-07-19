@@ -19,6 +19,9 @@ INSTALLDIR="$(pwd)"
 log=build_$(date +%Y%m%d%H%M).log
 testlog="$(pwd)/${log/.log/_test.log}"
 
+# QMCPACK code path
+buildtype=gpu_comp
+
 # build and test
 (
   date
@@ -32,8 +35,8 @@ testlog="$(pwd)/${log/.log/_test.log}"
   export CUDA_HOME=$CUDA_BASE
   export NCCL_HOME=$NCCL_BASE
 
-  mkdir gpu_comp
-  cd gpu_comp
+  mkdir $buildtype
+  cd $buildtype
   cmake -D CMAKE_C_COMPILER=mpicc -D CMAKE_CXX_COMPILER=mpicxx \
    -D BUILD_AFQMC=1 -D QMC_COMPLEX=1 -D QMC_MIXED_PRECISION=1 \
    -D ENABLE_CUDA=1 -D CUDA_ARCH="sm_70" -D BUILD_AFQMC_WITH_NCCL=1 \
@@ -53,10 +56,10 @@ tail -20 ${testlog}
 if [ ! -d bin ]; then
   mkdir bin
 fi
-rsync -az ${BUILDDIR}/$NVER/gpu_comp/bin bin/gpu_comp
+rsync -az ${BUILDDIR}/$NVER/$buildtype/bin/* bin/$buildtype
 (
   cd bin
-  ln -s gpu_comp/qmcpack qmcpack_gpu_comp
+  ln -s $buildtype/qmcpack qmcpack_$buildtype
 )
 
 # make the template a proper module 
@@ -68,4 +71,4 @@ sed -i "s|REPLACE_NAME|${NAME}|" $fmod
 sed -i "s|REPLACE_VERSION|${VERSION}|" $fmod
 
 # manual finish up
-echo -e "\nReview ${log} and ${testlog}, move ${fmod} to the correct location and then run:\n    rm -rf ${BUILDDIR}.\n"
+echo -e "\nReview ${log} and ${testlog}, move ${fmod} to the correct location and then run:\n    rm -rf ${BUILDDIR}\n"

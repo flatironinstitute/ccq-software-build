@@ -19,6 +19,9 @@ INSTALLDIR="$(pwd)"
 log=build_$(date +%Y%m%d%H%M).log
 testlog="$(pwd)/${log/.log/_test.log}"
 
+# QMCPACK code path
+buildtype=cpu_comp
+
 # build and test
 (
   date
@@ -30,8 +33,8 @@ testlog="$(pwd)/${log/.log/_test.log}"
   export HDF5_ROOT=$HDF5_BASE
   export BOOST_ROOT=$BOOST_BASE
 
-  mkdir cpu_comp
-  cd cpu_comp
+  mkdir $buildtype
+  cd $buildtype
   cmake -D CMAKE_C_COMPILER=mpicc -D CMAKE_CXX_COMPILER=mpicxx \
    -D BUILD_AFQMC=1 -D QMC_COMPLEX=1 -D QMC_MIXED_PRECISION=1 \
    -D ENABLE_TIMERS=1 -D BUILD_LMYENGINE_INTERFACE=0 \
@@ -48,14 +51,14 @@ tail -20 ${testlog}
 if [ ! -d bin ]; then
   mkdir bin
 fi
-rsync -az ${BUILDDIR}/$NVER/cpu_comp/bin bin/cpu_comp
+rsync -az ${BUILDDIR}/$NVER/$buildtype/bin/* bin/$buildtype
 rsync -az ${BUILDDIR}/$NVER/nexus .
 rm -rf nexus/tests  # something in here messes with Modules
 rsync -az ${BUILDDIR}/$NVER/utils .
 (
   cd bin
-  ln -s cpu_comp/qmcpack qmcpack_cpu_comp
-  ln -s cpu_comp/* .
+  ln -s $buildtype/qmcpack qmcpack_$buildtype
+  ln -s $buildtype/* .
   rm qmcpack qmcpack.settings
   ln -s ../nexus/bin/* .
   ln -s ../utils/afqmctools/bin/* .
@@ -73,4 +76,4 @@ sed -i "s|REPLACE_VERSION|${VERSION}|" $fmod
 sed "s|openmpi4/4.0.5|openmpi4/4.0.5-opa|g" < $fmod > $fmod1
 
 # manual finish up
-echo -e "\nReview ${log} and ${testlog}, move the $fmod $fmod1 files to the correct location and then run:\n    rm -rf ${BUILDDIR}.\n"
+echo -e "\nReview ${log} and ${testlog}, move the $fmod $fmod1 files to the correct location and then run:\n    rm -rf ${BUILDDIR}\n"
