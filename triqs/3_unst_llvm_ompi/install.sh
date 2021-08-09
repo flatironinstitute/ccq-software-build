@@ -140,6 +140,20 @@ log=build_$(date +%Y%m%d%H%M).log
     ctest -j4 
     make install 
     ################
+    
+    #cd ${BUILDDIR}
+    # install solid_dmft
+    git clone -b unstable https://github.com/flatironinstitute/solid_dmft.git solid_dmft.src 
+    # fetch latest changes
+    cd solid_dmft.src && git pull && cd ..
+    mkdir -p solid_dmft.build && cd solid_dmft.build
+
+    cmake ../solid_dmft.src
+    # make / test / install    
+    make 
+    make test 
+    make install 
+    ################
 ) &> ${log}
 
 # make the template a proper module 
