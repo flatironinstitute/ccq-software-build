@@ -16,7 +16,7 @@ export FC=gfortran
 mkdir -p /dev/shm/triqs3_unstable_build
 BUILDDIR="/dev/shm/triqs3_unstable_build"
 mkdir -p installation
-INSTALLDIR="$(pwd)/installation"
+INSTALLDIR=${TRIQS_ROOT}
 
 export ITENSOR_ROOT=${INSTALLDIR}
 export MKL_NUM_THREADS=1

@@ -16,7 +16,7 @@ export FC=gfortran
 mkdir -p /dev/shm/triqs3_stable_build
 BUILDDIR="/dev/shm/triqs3_stable_build"
 mkdir -p installation
-INSTALLDIR="$(pwd)/installation"
+INSTALLDIR="${TRIQS_ROOT}"
 
 export ITENSOR_ROOT=${INSTALLDIR}
 export MKL_NUM_THREADS=1
@@ -47,8 +47,8 @@ log=build_$(date +%Y%m%d%H%M).log
 
     cmake ../forktps.src -DBUILD_SHARED_LIBS=ON
     # make / test / install    
-    make -j10 
-    make test
+    make -j12
+    #make test
     make install
     ################
     
