@@ -16,7 +16,7 @@ export FC=gfortran
 
 # set up flexiblas:
 export MKL_INTERFACE_LAYER=GNU,LP64
-export MKL_THREADING_LAYER=GNU
+export MKL_THREADING_LAYER=SEQUENTIAL
 
 mkdir -p /dev/shm/triqs3_unstable_ione_build
 BUILDDIR="/dev/shm/triqs3_unstable_ione_build"
@@ -137,8 +137,9 @@ log=build_$(date +%Y%m%d%H%M).log
     ################
 ) &> ${log}
 
+mkdir -p ../../modules/triqs
 # make the template a proper module 
-echo '#%Module' > module
+echo '#%Module' > ../../modules/triqs/3_unst_llvm_ompi
 # update module template
-sed "s|REPLACEDIR|${INSTALLDIR}|g;s|MODULES|${MODULES}|g" < src.module >> module
+sed "s|REPLACEDIR|${INSTALLDIR}|g;s|MODULES|${MODULES}|g" < src.module >> ../../modules/triqs/3_unst_llvm_ompi
 
