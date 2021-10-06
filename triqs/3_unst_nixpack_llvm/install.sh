@@ -14,15 +14,20 @@ export CFLAGS="-march=broadwell"
 export CXXFLAGS="-stdlib=libc++ -Wno-register -march=broadwell" 
 export FC=gfortran
 
+export BLA_VENDOR=FlexiBLAS
+
 # set up flexiblas:
 export MKL_INTERFACE_LAYER=GNU,LP64
 export MKL_THREADING_LAYER=SEQUENTIAL
+export MKL_NUM_THREADS=1
+export OMP_NUM_THREADS=12
 
-mkdir -p /dev/shm/triqs3_unstable_ione_build
-BUILDDIR="/dev/shm/triqs3_unstable_ione_build"
+mkdir -p /dev/shm/triqs3_unstable_nixpack_build
+BUILDDIR="/dev/shm/triqs3_unstable_nixpack_build"
 mkdir -p installation/lib/python3.9/site-packages
 INSTALLDIR="$(pwd)/installation"
 
+export ITENSOR_ROOT=${INSTALLDIR}
 export TRIQS_ROOT=${INSTALLDIR}
 export PATH=${INSTALLDIR}/bin:$PATH
 export CPLUS_INCLUDE_PATH=${INSTALLDIR}/include:$CPLUS_INCLUDE_PATH
@@ -45,12 +50,12 @@ log=build_$(date +%Y%m%d%H%M).log
     cd triqs.src && git pull && cd ..
     rm -rf triqs.build && mkdir -p triqs.build && cd triqs.build
     
-    cmake ../triqs.src -DCMAKE_INSTALL_PREFIX=${INSTALLDIR} -DBuild_Deps=Always -DBLA_VENDOR=FlexiBLAS
+    cmake ../triqs.src -DCMAKE_INSTALL_PREFIX=${INSTALLDIR} -DBuild_Deps=Always
     # make / test / install    
     make -j10 
     ctest -j10 
     make install
-    ################
+    #################
 
     cd ${BUILDDIR}
     # install cthyb
@@ -122,7 +127,7 @@ log=build_$(date +%Y%m%d%H%M).log
     make install 
     ################
     
-    #cd ${BUILDDIR}
+    cd ${BUILDDIR}
     # install solid_dmft
     git clone -b unstable https://github.com/flatironinstitute/solid_dmft.git solid_dmft.src 
     # fetch latest changes
@@ -134,6 +139,30 @@ log=build_$(date +%Y%m%d%H%M).log
     make 
     make test 
     make install 
+    ################
+    
+    # install itensor
+    git clone -b v3 https://github.com/ITensor/ITensor.git itensor
+    # fetch latest changes
+    cd itensor && git pull && make clean
+    cp ${INSTALLDIR}/../options.mk.itensor ./options.mk
+    make -j10
+    # copying Itensor libs to triqs lib dir
+    cp -r lib itensor ${TRIQS_ROOT}/
+    ################
+
+    # install ForkTPS
+    cd ${BUILDDIR}
+    git clone -b unstable git@github.com:TRIQS/forktps.git forktps.src
+    # fetch latest changes
+    cd forktps.src && git pull && cd ..
+    mkdir -p forktps.build && cd forktps.build
+
+    cmake ../forktps.src -DBUILD_SHARED_LIBS=ON
+    # make / test / install    
+    make -j10 
+    make test
+    make install
     ################
 ) &> ${log}
 

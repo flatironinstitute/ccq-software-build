@@ -19,17 +19,20 @@ proc ModulesHelp { } {
 
 module          load    MODULES
 
-setenv CC       icx
-setenv CXX      icpx
+setenv CC       clang
+setenv CXX      clang++
 setenv CXXFLAGS "-stdlib=libc++ -Wno-register -march=broadwell"
-setenv FC       ifort
+setenv FC       gfortran
+setenv BLA_VENDOR FlexiBLAS
 
 setenv          TRIQS_ROOT          $root
+setenv          ITENSOR_ROOT        $root
 setenv          INSTALLDIR          $root
 setenv          TRIQS_VERSION       $version
 setenv          MKL_NUM_THREADS     1
 setenv          MKL_INTERFACE_LAYER GNU,LP64
 setenv          MKL_THREADING_LAYER SEQUENTIAL
+
 
 prepend-path    PATH                $root/bin
 prepend-path    CPLUS_INCLUDE_PATH  $root/include
