@@ -16,6 +16,8 @@ export FC=gfortran
 mkdir -p /dev/shm/triqs3_unstable_build
 BUILDDIR="/dev/shm/triqs3_unstable_build"
 mkdir -p installation
+
+RUNDIR=${PWD}
 INSTALLDIR=${TRIQS_ROOT}
 
 export ITENSOR_ROOT=${INSTALLDIR}
@@ -32,7 +34,7 @@ log=build_$(date +%Y%m%d%H%M).log
     git clone -b v3 https://github.com/ITensor/ITensor.git itensor
     # fetch latest changes
     cd itensor && git pull && make clean
-    cp ${INSTALLDIR}/../options.mk.itensor ./options.mk
+    cp ${RUNDIR}/options.mk.itensor ./options.mk
     make -j10
     # copying Itensor libs to triqs lib dir
     cp -r lib itensor ${TRIQS_ROOT}/
