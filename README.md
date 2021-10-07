@@ -40,3 +40,13 @@ To start just go into one of the software folders provides and just `bash instal
 For running on different parts of rusty/popeye the MPI version needs to be adapted. At the moment everything is compiled using the default `openmpi4/4.0.5` module, which is optimal for all infiband connected nodes (rome and worker0xxx), e.g. the constrain `rome` or no constraint. Moreover, these version works fine on all Linux workstations. To use the compiled code on the skylake or broadwell nodes with constraint skylake or broadwell in a slurm job one has to change the MPI module before each job to the module `openmpi4/4.0.5-opa` instead of `openmpi4/4.0.5`. In general no recompiling of the code is necessary. Therefore, each install script generates two modules. One for skylake and one module for rome architecture. More information can be found here: https://docs.simonsfoundation.org/index.php/MPI
 
 For triqs job files for rusty rome and skylake can be found in the directory of the install script. The install script will generate a rome and a skylake module. The modules differ only by the loaded MPI module. A first benchmark indicated that using cthyb on 3-4 skylake nodes will have the same speed as one rome node with 128 cores. 
+
+## new nixpack module system
+
+The new module system is rolled out and the scripts are updated for the new system. Right now both module systems work in parallel. To switch to the new module system execute `module load modules-new`. However, this will reset the `MODULEPATH` env variable. To conveniently switch to the new system one can create an alias in `~/.bashrc`: 
+
+```
+alias modules_new='module load modules-new && export MODULEPATH=~/git/ccq-software-build/modules:$MODULEPATH
+```
+
+the new install scripts will copy the modules to a different location to make the loading of modules faster.
