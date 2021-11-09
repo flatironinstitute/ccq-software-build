@@ -1,9 +1,9 @@
 #!/bin/bash
 
-# installation script for triqs3 unstable branch with clang OpenMPI toolchain with new spack modules
+# installation script for triqs3 stable branch with clang OpenMPI toolchain with new spack modules
 
 # load modules
-MODULES="gcc/10 llvm flexiblas openmpi cmake gmp fftw nfft llvm/12 hdf5/1.10.7-mpi boost/1.77.0-libcpp python/3.9 python-mpi/3.9 intel-oneapi-mkl"
+MODULES="gcc/10.2.0 llvm flexiblas openmpi cmake gmp fftw nfft hdf5/1.10.7-mpi boost/1.77.0-libcpp python/3.9 python-mpi/3.9 intel-oneapi-mkl"
 module purge
 module load ${MODULES}
 
@@ -21,8 +21,8 @@ export MKL_THREADING_LAYER=SEQUENTIAL
 export MKL_NUM_THREADS=1
 export OMP_NUM_THREADS=12
 
-mkdir -p /dev/shm/triqs3_unstable_nixpack_build
-BUILDDIR="/dev/shm/triqs3_unstable_nixpack_build"
+mkdir -p /dev/shm/triqs3_stable_nixpack_build
+BUILDDIR="/dev/shm/triqs3_stable_nixpack_build"
 mkdir -p installation/lib/python3.9/site-packages
 INSTALLDIR="$(pwd)/installation"
 
@@ -42,9 +42,9 @@ log=build_$(date +%Y%m%d%H%M).log
 
     module list
     
-    # install triqs
+     #install triqs
     cd ${BUILDDIR}
-    git clone -b unstable https://github.com/TRIQS/triqs triqs.src 
+    git clone -b 3.0.x https://github.com/TRIQS/triqs triqs.src 
     # fetch latest changes
     cd triqs.src && git pull && cd ..
     rm -rf triqs.build && mkdir -p triqs.build && cd triqs.build
@@ -58,7 +58,7 @@ log=build_$(date +%Y%m%d%H%M).log
 
     cd ${BUILDDIR}
     # install cthyb
-    git clone -b unstable git@github.com:TRIQS/cthyb.git cthyb.src 
+    git clone -b 3.0.x git@github.com:TRIQS/cthyb.git cthyb.src 
     # fetch latest changes
     cd cthyb.src && git pull && cd ..
     rm -rf cthyb.build && mkdir -p cthyb.build && cd cthyb.build
@@ -72,7 +72,7 @@ log=build_$(date +%Y%m%d%H%M).log
 
     cd ${BUILDDIR}
     # install ctint
-    git clone -b unstable git@github.com:TRIQS/ctint.git ctint.src 
+    git clone -b 3.0.x git@github.com:TRIQS/ctint.git ctint.src 
     # fetch latest changes
     cd ctint.src && git pull && cd ..
     rm -rf ctint.build && mkdir -p ctint.build && cd ctint.build
@@ -87,7 +87,7 @@ log=build_$(date +%Y%m%d%H%M).log
 
     cd ${BUILDDIR}
     # install ctseg
-    git clone -b unstable git@github.com:TRIQS/ctseg.git ctseg.src 
+    git clone -b 3.0.x git@github.com:TRIQS/ctseg.git ctseg.src 
     # fetch latest changes
     cd ctseg.src && git pull && cd ..
     rm -rf ctseg.build && mkdir -p ctseg.build && cd ctseg.build
@@ -98,10 +98,10 @@ log=build_$(date +%Y%m%d%H%M).log
     ctest -j10 
     make install 
     
-    ##################
+    #################
     cd ${BUILDDIR}
     # install dfttools
-    git clone -b unstable https://github.com/TRIQS/dft_tools.git dft_tools.src 
+    git clone -b 3.0.x https://github.com/TRIQS/dft_tools.git dft_tools.src 
     # fetch latest changes
     cd dft_tools.src && git pull && cd ..
     rm -rf dft_tools.build && mkdir -p dft_tools.build && cd dft_tools.build
@@ -115,7 +115,7 @@ log=build_$(date +%Y%m%d%H%M).log
     
     cd ${BUILDDIR}
     # install maxent
-    git clone -b unstable https://github.com/TRIQS/maxent.git maxent.src 
+    git clone -b 1.0.x https://github.com/TRIQS/maxent.git maxent.src 
     # fetch latest changes
     cd maxent.src && git pull && cd ..
     rm -rf maxent.build && mkdir -p maxent.build && cd maxent.build
@@ -129,7 +129,7 @@ log=build_$(date +%Y%m%d%H%M).log
 
     cd ${BUILDDIR}
     # install TPRF
-    git clone -b unstable https://github.com/TRIQS/tprf.git tprf.src 
+    git clone -b 3.0.x https://github.com/TRIQS/tprf.git tprf.src 
     # fetch latest changes
     cd tprf.src && git pull && cd ..
     rm -rf tprf.build && mkdir -p tprf.build && cd tprf.build
@@ -143,7 +143,7 @@ log=build_$(date +%Y%m%d%H%M).log
 
     cd ${BUILDDIR}
     # install hubbardI
-    git clone -b unstable https://github.com/TRIQS/hubbardI.git hubbardI.src 
+    git clone -b 3.0.x https://github.com/TRIQS/hubbardI.git hubbardI.src 
     # fetch latest changes
     cd hubbardI.src && git pull && cd ..
     rm -rf hubbardI.build && mkdir -p hubbardI.build && cd hubbardI.build
@@ -157,7 +157,7 @@ log=build_$(date +%Y%m%d%H%M).log
     
     cd ${BUILDDIR}
     # install solid_dmft
-    git clone -b unstable https://github.com/flatironinstitute/solid_dmft.git solid_dmft.src 
+    git clone -b 3.0.x https://github.com/flatironinstitute/solid_dmft.git solid_dmft.src 
     # fetch latest changes
     cd solid_dmft.src && git pull && cd ..
     rm -rf solid_dmft.build && mkdir -p solid_dmft.build && cd solid_dmft.build
@@ -179,24 +179,11 @@ log=build_$(date +%Y%m%d%H%M).log
     cp -r lib itensor ${TRIQS_ROOT}/
     ################
 
-    # install ForkTPS
-    cd ${BUILDDIR}
-    git clone -b unstable git@github.com:TRIQS/forktps.git forktps.src
-    # fetch latest changes
-    cd forktps.src && git pull && cd ..
-    mkdir -p forktps.build && cd forktps.build
-
-    cmake ../forktps.src -DBUILD_SHARED_LIBS=ON
-    # make / test / install    
-    make -j10 
-    make test
-    make install
-    ################
 ) &> ${log}
 
 mkdir -p ../../modules/triqs
 # make the template a proper module 
-echo '#%Module' > ../../modules/triqs/3_unst_llvm_ompi
+echo '#%Module' > ../../modules/triqs/3_stable_llvm_ompi
 # update module template
-sed "s|REPLACEDIR|${INSTALLDIR}|g;s|MODULES|${MODULES}|g" < src.module >> ../../modules/triqs/3_unst_llvm_ompi
+sed "s|REPLACEDIR|${INSTALLDIR}|g;s|MODULES|${MODULES}|g" < src.module >> ../../modules/triqs/3_stable_llvm_ompi
 

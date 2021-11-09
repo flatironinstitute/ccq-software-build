@@ -1,12 +1,12 @@
 #
-# Module  Quantum Espresso with W90 with GNU MKL  
+# Modul triqs unstable compiled with intel oneAPI
 #
 
 set     name        triqs 
-set     version     3_unstable_ompi_mkl
+set     version     3_stable_nixpack_llvm
 set     root        REPLACEDIR 
 
-set     description "triqs 3.x unstable release including dfttools cthyb etc" 
+set     description "triqs 3.x stable release including dfttools cthyb etc" 
 
 module-whatis   "$description"
 
@@ -16,26 +16,29 @@ proc ModulesHelp { } {
     puts stderr "Version:     $version"
 }
 
-# Only one version of triqs can be loaded at a time
-conflict $name intel/mpi intel/compiler
-
 
 module          load    MODULES
 
 setenv CC       clang
 setenv CXX      clang++
-setenv CXXFLAGS "-stdlib=libc++ -Wno-register"
+setenv CXXFLAGS "-stdlib=libc++ -Wno-register -march=broadwell"
 setenv FC       gfortran
+setenv BLA_VENDOR FlexiBLAS
 
 setenv          TRIQS_ROOT          $root
+setenv          ITENSOR_ROOT        $root
+setenv          INSTALLDIR          $root
 setenv          TRIQS_VERSION       $version
 setenv          MKL_NUM_THREADS     1
+setenv          MKL_INTERFACE_LAYER GNU,LP64
+setenv          MKL_THREADING_LAYER SEQUENTIAL
+
 
 prepend-path    PATH                $root/bin
 prepend-path    CPLUS_INCLUDE_PATH  $root/include
 prepend-path    LIBRARY_PATH        $root/lib
 prepend-path    LD_LIBRARY_PATH     $root/lib
-prepend-path    PYTHONPATH          $root/lib/python3.7/site-packages
+prepend-path    PYTHONPATH          $root/lib/python3.9/site-packages
 prepend-path    CMAKE_PREFIX_PATH   $root/lib/cmake/triqs
 prepend-path    CMAKE_PREFIX_PATH   $root/lib/cmake/cpp2py
 
