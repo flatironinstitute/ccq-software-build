@@ -3,7 +3,7 @@
 # installation script for QE with GNU OpenMPI toolchain
 
 # load modules
-MODULES="gcc/10 openmpi cmake hdf5/1.10.7-mpi intel-oneapi-mkl wannier90/3.1_gnu_ompi git"
+MODULES="gcc/10 openmpi cmake hdf5/1.10.7-mpi intel-oneapi-mkl wannier90/3.1_gnu_ompi git libxc"
 module purge
 module load ${MODULES}
 
@@ -27,10 +27,11 @@ log=build_$(date +%Y%m%d%H%M).log
     
     cmake -D CMAKE_C_COMPILER=mpicc -D CMAKE_Fortran_COMPILER=mpif90 \
         -D CMAKE_VERBOSE_MAKEFILE=ON \
-        -D QE_ENABLE_HDF5=ON \
-        -D QE_ENABLE_SCALAPACK=ON \
         -D BLA_VENDOR=Intel10_64lp_seq \
         -D CMAKE_INSTALL_PREFIX=${INSTALLDIR} \
+        -D QE_ENABLE_HDF5=ON \
+        -D QE_ENABLE_LIBXC=ON \ 
+        -D QE_ENABLE_SCALAPACK=ON \
         ../
 
 # build all
