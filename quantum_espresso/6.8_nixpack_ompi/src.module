@@ -22,3 +22,5 @@ conflict $name intel/mpi intel/compiler
 
 module          load    MODULES
 prepend-path    PATH    $root/bin
+prepend-path    CPLUS_INCLUDE_PATH  $root/include
+prepend-path    LIBRARY_PATH        $root/lib64
