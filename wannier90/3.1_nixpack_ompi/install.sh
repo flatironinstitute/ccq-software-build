@@ -3,9 +3,8 @@
 # installation script for wannier90 with GNU OpenMPI toolchain
 
 # load modules
-MODULES="gcc/10.2.0 openmpi fftw intel-oneapi-mkl/2021.3.0"
+MODULES="gcc/10.2.0 openmpi/4 fftw intel-oneapi-mkl python/3.9"
 module purge
-module load modules-new
 module load ${MODULES}
 
 BUILDDIR="/dev/shm/w90_build_31_nixpack_ompi"
@@ -42,7 +41,7 @@ mkdir ${INSTALLDIR}/bin
 
 mkdir -p ../../modules/wannier90
 # make the template a proper module 
-echo '#%Module' > ../../modules/wannier90/3.1_nixpack_ompi
+echo '#%Module' > ../../modules/wannier90/3.1_gnu_ompi
 # update module template
-sed "s|REPLACEDIR|${INSTALLDIR}|g;s|MODULES|${MODULES}|g" < src.module >> ../../modules/wannier90/3.1_nixpack_ompi
+sed "s|REPLACEDIR|${INSTALLDIR}|g;s|MODULES|${MODULES}|g" < src.module >> ../../modules/wannier90/3.1_gnu_ompi
 
