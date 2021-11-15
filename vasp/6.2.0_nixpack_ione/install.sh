@@ -4,12 +4,12 @@
 # installation script for Vasp +  wannier90 using GNU OpenMPI toolchain
 
 # load modules
-MODULES="gcc/10 openmpi/4 fftw intel-oneapi-mkl"
+MODULES="intel-oneapi-compilers intel-oneapi-mkl intel-oneapi-mpi"
 module purge
 module load modules-new
 module load ${MODULES}
 
-BUILDDIR="/dev/shm/vasp_build_620_nixpack_gnu"
+BUILDDIR="/dev/shm/vasp_build_620_nixpack_ione"
 mkdir -p ${BUILDDIR}
 INSTALLDIR="$(pwd)"
 
@@ -33,7 +33,7 @@ log=build_$(date +%Y%m%d%H%M).log
     # copy makefile and include wannier lib
     cp ${INSTALLDIR}/makefile.include ${BUILDDIR}/${VASPFILE}
     
-    cp ${INSTALLDIR}/../../wannier90/3.1_nixpack_ompi/bin/libwannier_seq.a ${BUILDDIR}/${VASPFILE}
+    #cp ${INSTALLDIR}/../../wannier90/3.1_nixpack_ompi/bin/libwannier_seq.a ${BUILDDIR}/${VASPFILE}
     
     # build vasp std gamma version and non-collinear
     make DEPS=1 -j12 std gam ncl
@@ -51,7 +51,7 @@ log=build_$(date +%Y%m%d%H%M).log
     
 mkdir -p ../../modules/vasp
 # make the template a proper module 
-echo '#%Module' > ../../modules/vasp/6.2.0_nixpack_gnu
+echo '#%Module' > ../../modules/vasp/6.2.0_nixpack_intel
 # update module template
-sed "s|REPLACEDIR|${INSTALLDIR}|g;s|MODULES|${MODULES}|g" < src.module >> ../../modules/vasp/6.2.0_nixpack_gnu
+sed "s|REPLACEDIR|${INSTALLDIR}|g;s|MODULES|${MODULES}|g" < src.module >> ../../modules/vasp/6.2.0_nixpack_intel
 
