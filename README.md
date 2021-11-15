@@ -19,19 +19,17 @@ export MODULEPATH=/path/to/ccq-software-build/modules:$MODULEPATH
 Just exchange the modulepath above with the location of the git repo on your machine. 
 
 The following codes are supported:
-* Wannier90 ver 3.1 using the same build chain as Vasp 6.1
+* Wannier90 ver 3.1 using the same build chain as Vasp 6.2
     * required to build first for Vasp and QE
-* Vasp ver 6.1 linked against Wannier90 ver 3.1 
+* Vasp ver 6.2 linked against Wannier90 ver 3.1 
     * vasp tgz file required 
     * OpenMPI 4, Intel MKL including Scalapack and blacs, FFTW
     * Wannier90 is fully MPI enabled
-* Quantum Espresso ver 6.6 including w90 (no HDF5 support yet - missing fortran2003 support in HDFlib module)
+* Quantum Espresso ver 6.8
 * Elk ver 6.8.4 including wannier90 interface
     * OpenMPI 4, Intel MKL including Scalapack and blacs, FFTW
 * triqs 3.x.x unstable branch using the same build chain as the above DFT codes
-    * includes the triqs applications: cthyb, dfttools, maxent, TPRF
-* ForkTPS 3.x.x unstable, for triqs3 (install triqs3 first)
-    * installs itensor
+    * includes the triqs applications: cthyb, dfttools, maxent, TPRF, ctseg, ctint, ForkTPS, solid_dmft
 
 To start just go into one of the software folders provides and just `bash install.sh`.
 
