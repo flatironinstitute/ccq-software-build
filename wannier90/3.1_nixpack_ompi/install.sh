@@ -3,7 +3,7 @@
 # installation script for wannier90 with GNU OpenMPI toolchain
 
 # load modules
-MODULES="gcc/10.2.0 openmpi/4 fftw intel-oneapi-mkl python/3.9"
+MODULES="gcc/10 openmpi/4 fftw intel-oneapi-mkl python/3.9"
 module purge
 module load ${MODULES}
 
