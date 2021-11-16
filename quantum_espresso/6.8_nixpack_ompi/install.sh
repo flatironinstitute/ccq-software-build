@@ -25,13 +25,13 @@ log=build_$(date +%Y%m%d%H%M).log
     
     mkdir -p build && cd build
     
-    cmake -D CMAKE_C_COMPILER=mpicc -D CMAKE_Fortran_COMPILER=mpif90 \
-        -D CMAKE_VERBOSE_MAKEFILE=ON \
-        -D BLA_VENDOR=Intel10_64lp_seq \
-        -D CMAKE_INSTALL_PREFIX=${INSTALLDIR} \
-        -D QE_ENABLE_HDF5=ON \
-        -D QE_ENABLE_LIBXC=ON \ 
-        -D QE_ENABLE_SCALAPACK=ON \
+    cmake -DCMAKE_C_COMPILER=mpicc -DCMAKE_Fortran_COMPILER=mpif90 \
+        -DCMAKE_VERBOSE_MAKEFILE=ON \
+        -DBLA_VENDOR=Intel10_64lp_seq \
+        -DCMAKE_INSTALL_PREFIX=${INSTALLDIR} \
+        -DQE_ENABLE_HDF5=ON \
+        -DQE_ENABLE_LIBXC=ON \
+        -DQE_ENABLE_SCALAPACK=ON \
         ../
 
 # build all
