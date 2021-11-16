@@ -41,8 +41,7 @@ log=build_$(date +%Y%m%d%H%M).log
     ctest -j12
 
     # install it
-    cd ..
-    make install 
+    make install
 ) &> ${log}
 
 mkdir -p ../../modules/quantum_espresso
