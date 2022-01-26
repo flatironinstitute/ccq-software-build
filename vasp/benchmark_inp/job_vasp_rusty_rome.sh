@@ -11,11 +11,22 @@
 
 #======START=====
 
+# set OMP_NUM_THREADS so that times ntasks-per-node is the total number of cores on each node
+# Vasp is currently compiled without OpenMP support!
 export OMP_NUM_THREADS=1
 ulimit -s unlimited
 
-module load vasp/6.1.2_gnu_ompi/module 
+module purge
+module load slurm 
+module load vasp/6.2.0_nixpack_gnu
+######################
+# for skylake jobs!!
+# comment this line for skylake jobs:
+#module load openmpi-opa
+#######################
 
-mpirun vasp_std
+# with map by socket a maximum of number of cores per physical cores are spawned! This is cores per node/2
+# if more threads are needed switch socket -> node
+mpirun --map-by socket:pe=$OMP_NUM_THREADS vasp_std
 
 #=====END====
