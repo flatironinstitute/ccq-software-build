@@ -4,7 +4,7 @@
 # installation script for Vasp +  wannier90 using GNU OpenMPI toolchain
 
 # load modules
-MODULES="intel-oneapi-compilers intel-oneapi-mkl intel-oneapi-mpi"
+MODULES="modules/1.58-20220124 intel-oneapi-compilers intel-oneapi-mkl intel-oneapi-mpi"
 module purge
 module load modules-new
 module load ${MODULES}

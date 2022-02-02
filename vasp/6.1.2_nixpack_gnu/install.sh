@@ -4,7 +4,7 @@
 # installation script for Vasp +  wannier90 using GNU OpenMPI toolchain
 
 # load modules
-MODULES="gcc/7 openmpi/4 fftw intel-oneapi-mkl"
+MODULES="modules/1.58-20220124 gcc/7 openmpi/4 fftw intel-oneapi-mkl"
 module purge
 module load ${MODULES}
 
