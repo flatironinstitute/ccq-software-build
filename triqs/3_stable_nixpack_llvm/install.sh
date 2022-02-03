@@ -24,7 +24,7 @@ export OMP_NUM_THREADS=12
 BUILDINFO=3_stable_nixpack_llvm
 BUILDDIR=/dev/shm/triqs${BUILDINFO}_build
 INSTALLDIR=$(pwd)/installation
-MODULEDIR=$(pwd)/modules
+MODULEDIR=$(git rev-parse --show-toplevel)/modules
 mkdir -p $BUILDDIR
 mkdir -p $INSTALLDIR/lib/python3.9/site-packages
 NCORES=10
