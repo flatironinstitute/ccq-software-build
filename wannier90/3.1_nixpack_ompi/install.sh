@@ -3,13 +3,15 @@
 # installation script for wannier90 with GNU OpenMPI toolchain
 
 # load modules
-MODULES="gcc/10 openmpi/4 fftw intel-oneapi-mkl python/3.9"
+MODULES="modules/1.58-20220124 gcc/10 openmpi/4 fftw intel-oneapi-mkl python/3.9"
 module purge
 module load ${MODULES}
 
 BUILDDIR="/dev/shm/w90_build_31_nixpack_ompi"
 mkdir -p ${BUILDDIR}
 INSTALLDIR="$(pwd)"
+
+NCORES=10
 
 log=build_$(date +%Y%m%d%H%M).log
 mkdir ${INSTALLDIR}/bin
@@ -19,21 +21,21 @@ mkdir ${INSTALLDIR}/bin
     module list
 
     # clone version 3.1. from github
-    git clone -b develop https://github.com/wannier-developers/wannier90.git wannier90
+    git clone -b develop --depth=1 https://github.com/wannier-developers/wannier90.git wannier90
 
     cd wannier90 
     make clean
 
     # first build seq lib version 
     cp ${INSTALLDIR}/make.inc_seq make.inc
-    make -j8 lib
+    make -j$NCORES lib
     cp libwannier.a ${INSTALLDIR}/bin/libwannier_seq.a
     rm libwannier.a
     make clean
     
     # build mpi version of wannier90
     cp ${INSTALLDIR}/make.inc_parallel make.inc
-    make -j8 wannier lib post w90chk2chk
+    make -j$NCORES wannier lib post w90chk2chk
     
     # copy binaries
     cp postw90.x wannier90.x libwannier.a w90chk2chk.x ${INSTALLDIR}/bin/
