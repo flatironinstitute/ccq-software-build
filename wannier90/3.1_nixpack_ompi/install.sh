@@ -11,7 +11,7 @@ BUILDDIR="/dev/shm/w90_build_31_nixpack_ompi"
 mkdir -p ${BUILDDIR}
 INSTALLDIR="$(pwd)"
 
-NCORES=10
+NCORES=1
 
 log=build_$(date +%Y%m%d%H%M).log
 mkdir ${INSTALLDIR}/bin
