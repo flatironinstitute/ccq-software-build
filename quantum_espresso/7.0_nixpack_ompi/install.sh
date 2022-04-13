@@ -3,7 +3,7 @@
 # installation script for QE with GNU OpenMPI toolchain
 
 # load modules
-MODULES="gcc/10 openmpi cmake hdf5/1.10.7-mpi intel-oneapi-mkl wannier90/3.1_gnu_ompi git libxc"
+MODULES="modules/1.58-20220124 gcc/10 openmpi/4 fftw intel-oneapi-mkl hdf5/1.10.8-mpi git libxc wannier90/3.1_gnu_ompi cmake"
 module purge
 module load ${MODULES}
 
@@ -38,7 +38,7 @@ log=build_$(date +%Y%m%d%H%M).log
     make -j 12 all
 
     # run tests
-    ctest -j12
+    # ctest -j12
 
     # install it
     make install
