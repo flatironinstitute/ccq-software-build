@@ -11,9 +11,18 @@
 
 #======START=====
 
+# set OMP_NUM_THREADS so that times ntasks-per-node is the total number of cores on each node
+# Vasp is currently compiled without OpenMP support!
 export OMP_NUM_THREADS=1
+ulimit -s unlimited
 
-module load quantum_espresso/6.6_gnu_ompi/module
+module purge
+module load slurm quantum_espresso/7.0_gnu_ompi
+######################
+# for skylake jobs!!
+# comment this line for skylake jobs:
+#module load openmpi-opa
+#######################
 
 mpirun pw.x < si.scf.in > si.scf.out
 
