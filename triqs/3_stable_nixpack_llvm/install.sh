@@ -21,13 +21,13 @@ export MKL_THREADING_LAYER=SEQUENTIAL
 export MKL_NUM_THREADS=1
 export OMP_NUM_THREADS=12
 
-BUILDINFO=3_stable_nixpack_llvm
+BUILDINFO=3_stable_llvm_ompi
 BUILDDIR=/dev/shm/triqs${BUILDINFO}_build
 INSTALLDIR=$(pwd)/installation
 MODULEDIR=$(git rev-parse --show-toplevel)/modules
 mkdir -p $BUILDDIR
 mkdir -p $INSTALLDIR/lib/python3.9/site-packages
-NCORES=10
+NCORES=12
 
 export ITENSOR_ROOT=${INSTALLDIR}
 export TRIQS_ROOT=${INSTALLDIR}
@@ -47,7 +47,7 @@ log=build_$(date +%Y%m%d%H%M).log
 
     # install triqs
     cd ${BUILDDIR}
-    git clone -b 3.0.x --depth 1 https://github.com/TRIQS/triqs triqs.src
+    git clone -b 3.1.x --depth 1 https://github.com/TRIQS/triqs triqs.src
     # fetch latest changes
     cd triqs.src && git pull && cd ..
     rm -rf triqs.build && mkdir -p triqs.build && cd triqs.build
@@ -61,7 +61,7 @@ log=build_$(date +%Y%m%d%H%M).log
 
     cd ${BUILDDIR}
     # install cthyb
-    git clone -b 3.0.x --depth 1 git@github.com:TRIQS/cthyb.git cthyb.src
+    git clone -b 3.1.x --depth 1 https://github.com/TRIQS/cthyb cthyb.src
     # fetch latest changes
     cd cthyb.src && git pull && cd ..
     rm -rf cthyb.build && mkdir -p cthyb.build && cd cthyb.build
@@ -75,7 +75,7 @@ log=build_$(date +%Y%m%d%H%M).log
 
     cd ${BUILDDIR}
     # install ctint
-    git clone -b 3.0.x --depth 1 git@github.com:TRIQS/ctint.git ctint.src
+    git clone -b 3.1.x --depth 1 git@github.com:TRIQS/ctint.git ctint.src
     # fetch latest changes
     cd ctint.src && git pull && cd ..
     rm -rf ctint.build && mkdir -p ctint.build && cd ctint.build
@@ -90,7 +90,7 @@ log=build_$(date +%Y%m%d%H%M).log
 
     cd ${BUILDDIR}
     # install ctseg
-    git clone -b 3.0.x --depth 1 git@github.com:TRIQS/ctseg.git ctseg.src
+    git clone -b 3.1.x --depth 1 git@github.com:TRIQS/ctseg.git ctseg.src
     # fetch latest changes
     cd ctseg.src && git pull && cd ..
     rm -rf ctseg.build && mkdir -p ctseg.build && cd ctseg.build
@@ -104,7 +104,7 @@ log=build_$(date +%Y%m%d%H%M).log
     #################
     cd ${BUILDDIR}
     # install dfttools
-    git clone -b 3.0.x --depth 1 https://github.com/TRIQS/dft_tools.git dft_tools.src
+    git clone -b 3.1.x --depth 1 https://github.com/TRIQS/dft_tools.git dft_tools.src
     # fetch latest changes
     cd dft_tools.src && git pull && cd ..
     rm -rf dft_tools.build && mkdir -p dft_tools.build && cd dft_tools.build
@@ -118,7 +118,7 @@ log=build_$(date +%Y%m%d%H%M).log
 
     cd ${BUILDDIR}
     # install maxent
-    git clone -b 1.0.x --depth 1 https://github.com/TRIQS/maxent.git maxent.src
+    git clone -b 1.1.x --depth 1 https://github.com/TRIQS/maxent.git maxent.src
     # fetch latest changes
     cd maxent.src && git pull && cd ..
     rm -rf maxent.build && mkdir -p maxent.build && cd maxent.build
@@ -132,7 +132,7 @@ log=build_$(date +%Y%m%d%H%M).log
 
     cd ${BUILDDIR}
     # install TPRF
-    git clone -b 3.0.x --depth 1 https://github.com/TRIQS/tprf.git tprf.src
+    git clone -b 3.1.x --depth 1 https://github.com/TRIQS/tprf.git tprf.src
     # fetch latest changes
     cd tprf.src && git pull && cd ..
     rm -rf tprf.build && mkdir -p tprf.build && cd tprf.build
@@ -146,7 +146,7 @@ log=build_$(date +%Y%m%d%H%M).log
 
     cd ${BUILDDIR}
     # install hubbardI
-    git clone -b 3.0.x --depth 1 https://github.com/TRIQS/hubbardI.git hubbardI.src
+    git clone -b 3.1.x --depth 1 https://github.com/TRIQS/hubbardI.git hubbardI.src
     # fetch latest changes
     cd hubbardI.src && git pull && cd ..
     rm -rf hubbardI.build && mkdir -p hubbardI.build && cd hubbardI.build
@@ -160,7 +160,7 @@ log=build_$(date +%Y%m%d%H%M).log
 
     cd ${BUILDDIR}
     # install solid_dmft
-    git clone -b 3.0.x --depth 1 https://github.com/flatironinstitute/solid_dmft.git solid_dmft.src
+    git clone -b 3.1.x --depth 1 https://github.com/flatironinstitute/solid_dmft.git solid_dmft.src
     # fetch latest changes
     cd solid_dmft.src && git pull && cd ..
     rm -rf solid_dmft.build && mkdir -p solid_dmft.build && cd solid_dmft.build
@@ -168,7 +168,8 @@ log=build_$(date +%Y%m%d%H%M).log
     cmake ../solid_dmft.src
     # make / test / install
     make -j$NCORES
-    ctest -j$NCORES
+    # tests leverage MPI:
+    make test
     make install
     ################
 
@@ -182,6 +183,20 @@ log=build_$(date +%Y%m%d%H%M).log
     cp -r lib itensor ${TRIQS_ROOT}/
     ################
 
+    # install ForkTPS
+    cd ${BUILDDIR}
+    git clone -b 3.1.x --depth 1 git@github.com:TRIQS/forktps.git forktps.src
+    # fetch latest changes
+    cd forktps.src && git pull && cd ..
+    mkdir -p forktps.build && cd forktps.build
+
+    cmake ../forktps.src -DBUILD_SHARED_LIBS=ON
+    # make / test / install
+    make -j$NCORES
+    # tests leverage MPI / OpenMP
+    make test
+    make install
+    ################
 ) &> ${log}
 
 mkdir -p $MODULEDIR/triqs
