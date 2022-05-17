@@ -21,13 +21,13 @@ export MKL_THREADING_LAYER=SEQUENTIAL
 export MKL_NUM_THREADS=1
 export OMP_NUM_THREADS=12
 
-BUILDINFO=3_unst_nixpack_llvm
+BUILDINFO=3_unst_llvm_ompi
 BUILDDIR=/dev/shm/triqs${BUILDINFO}_build
 INSTALLDIR=$(pwd)/installation
 MODULEDIR=$(git rev-parse --show-toplevel)/modules
 mkdir -p $BUILDDIR
 mkdir -p $INSTALLDIR/lib/python3.9/site-packages
-NCORES=10
+NCORES=12
 
 export ITENSOR_ROOT=${INSTALLDIR}
 export TRIQS_ROOT=${INSTALLDIR}
@@ -168,7 +168,8 @@ log=build_$(date +%Y%m%d%H%M).log
     cmake ../solid_dmft.src
     # make / test / install
     make -j$NCORES
-    ctest -j$NCORES
+    # tests are MPI parrallelized
+    make test
     make install
     ################
 
@@ -192,7 +193,8 @@ log=build_$(date +%Y%m%d%H%M).log
     cmake ../forktps.src -DBUILD_SHARED_LIBS=ON
     # make / test / install
     make -j$NCORES
-    ctest -j$NCORES
+    # tests are MPI and OpenMP parrallelized:
+    make test
     make install
     ################
 ) &> ${log}
