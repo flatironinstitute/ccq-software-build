@@ -39,7 +39,13 @@ log=build_$(date +%Y%m%d%H%M).log
     cp ${INSTALLDIR}/makefile.include ${BUILDDIR}/${VASPFILE}
     
     cp ${INSTALLDIR}/../../wannier90/3.1_nixpack_ompi/bin/libwannier_seq.a ${BUILDDIR}/${VASPFILE}
-    
+     
+    # patch for Vasp CSC
+    cd src
+    rsync -av ${INSTALLDIR}/vasp_csc_patch ${BUILDDIR}/${VASPFILE}
+    for name in electron.F fileio.F locproj.F mlwf.F; do patch $name -p1 -i ../vasp_csc_patch/$name.diff; done
+    cd ${BUILDDIR}/${VASPFILE}
+
     # build vasp std gamma version and non-collinear
     make DEPS=1 -j$NCORES std gam ncl
 
