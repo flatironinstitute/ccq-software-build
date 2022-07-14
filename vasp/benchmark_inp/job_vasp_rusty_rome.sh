@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --job-name="vasp-test-rome"
-#SBATCH --time=08:00:00
-#SBATCH --nodes=1
+#SBATCH --time=01:00:00
+#SBATCH --nodes=2
 #SBATCH --ntasks-per-node=128
 #SBATCH --ntasks-per-core=1
 #SBATCH --constraint=rome 
@@ -17,8 +17,7 @@ export OMP_NUM_THREADS=1
 ulimit -s unlimited
 
 module purge
-module load slurm 
-module load vasp/6.2.0_nixpack_gnu
+module load vasp/6.3.0_nixpack_gnu slurm
 ######################
 # for skylake jobs!!
 # comment this line for skylake jobs:

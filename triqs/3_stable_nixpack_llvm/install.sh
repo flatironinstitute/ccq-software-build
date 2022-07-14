@@ -172,6 +172,20 @@ log=build_$(date +%Y%m%d%H%M).log
     make test
     make install
     ################
+    
+    cd ${BUILDDIR}
+    # install Hartree Fock
+    git clone -b unstable --depth 1 https://github.com/triqs/hartree_fock.git hartree_fock.src
+    # fetch latest changes
+    cd hartree_fock.src && git pull && cd ..
+    rm -rf hartree_fock.build && mkdir -p hartree_fock.build && cd hartree_fock.build
+
+    cmake ../hartree_fock.src
+    # make / test / install
+    make
+    make test
+    make install
+    ################
 
     # install itensor
     git clone -b v3 --depth 1 https://github.com/ITensor/ITensor.git itensor
