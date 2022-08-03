@@ -1,0 +1,65 @@
+#!/bin/bash
+
+# installation script for QE with GNU OpenMPI toolchain
+
+# load modules
+MODULES="modules/2.0-20220630 gcc/11 openmpi/4 fftw intel-oneapi-mkl hdf5/mpi git libxc wannier90/3.1_nix2_gnu_ompi"
+module purge
+module load ${MODULES}
+
+export FFLAGS="-O3 -g -march=broadwell -fallow-argument-mismatch"
+
+BUILDINFO=7.1_nix2_gnu_ompi_respack
+BUILDDIR=/tmp/qe_${BUILDINFO}_build
+mkdir $BUILDDIR
+
+INSTALLDIR=$(pwd)/installation
+
+MODULEDIR=$(git rev-parse --show-toplevel)/modules
+
+# it seems that QE with configure has problems correctly resolving dependencies so stick to NCORES=1 for now
+NCORES=1
+export MKL_NUM_THREADS=1
+export OMP_NUM_THREADS=1
+
+log=build_$(date +%Y%m%d%H%M).log
+testlog="$(pwd)/${log/.log/_test.log}"
+(
+    cd ${BUILDDIR}
+    
+    module list
+
+    # clone version 7.1 from github
+    git clone -b qe-7.1 --depth 1 https://github.com/QEF/q-e.git qe
+    cd qe
+    
+    ./configure -enable-parallel=yes -with-scalapack=yes --with-libxc=yes --with-libxc-prefix=$LIBXC_ROOT -prefix=${INSTALLDIR}
+
+    make -j$NCORES all
+    make install
+
+    # unfolding code
+    cd ${BUILDDIR}
+    git clone --depth 1 https://bitbucket.org/bonfus/unfold-x.git 
+    cd unfold-x
+    sed -i 's+$(QE_ROOT)/FFTXlib/libqefft.a+$(QE_ROOT)/FFTXlib/src/libqefft.a +g' src/Makefile
+    make QE_ROOT=${BUILDDIR}/qe
+    cp bin/* ${INSTALLDIR}/bin/
+    
+    # Respack
+    cd ${BUILDDIR}
+    tar -xf ${INSTALLDIR}/../RESPACK-20200113.tar.gz
+    cd RESPACK-20200113
+    mkdir build && cd build
+    cmake -DCONFIG=gcc -DBLA_VENDOR=Intel10_64lp_seq -DCMAKE_INSTALL_PREFIX=${INSTALLDIR} ../
+    make -j$NCORES
+    make install
+
+) &> ${log}
+
+mkdir -p $MODULEDIR/quantum_espresso
+# make the template a proper module
+echo '#%Module' > $MODULEDIR/quantum_espresso/$BUILDINFO
+# update module template
+sed "s|REPLACEDIR|${INSTALLDIR}|g;s|MODULES|${MODULES}|g" < src.module >> $MODULEDIR/quantum_espresso/$BUILDINFO
+
