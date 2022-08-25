@@ -4,7 +4,7 @@
 
 # load modules
 MODULES="modules/2.0-20220630 gcc/11 openmpi/4 hdf5/mpi"
-module purge
+module --force purge
 module load ${MODULES}
 
 BUILDINFO=4.8.1_nix2_gnu_ompi
@@ -37,7 +37,7 @@ log=build_$(date +%Y%m%d%H%M).log
         LIBS="-lhdf5_fortran -lhdf5_hl_fortran -lhdf5_hl -lhdf5" \
         --enable-parallel-tests --with-mpiexec=mpirun --prefix=${INSTALLDIR}
     make -j$NCORES
-    make check
+    #make check
     make install
     cd ../
 
@@ -54,7 +54,7 @@ log=build_$(date +%Y%m%d%H%M).log
         LDFLAGS="-L${NETCDF_BASE}/lib -L${HDF5_BASE}/lib" LIBS="-lhdf5_fortran -lhdf5_hl_fortran -lhdf5_hl -lhdf5" \
         --enable-parallel-tests --prefix=${INSTALLDIR}
     make -j$NCORES
-    make check
+    #make check
     make install
 ) &> ${log}
 

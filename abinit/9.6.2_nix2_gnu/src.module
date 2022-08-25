@@ -1,0 +1,26 @@
+#
+# Module: abinit with openmpi
+#
+
+set name abinit
+set version 9.6.2_nix2_gnu_ompi
+set     root        REPLACEDIR
+
+set     description "abinit ver 9.6.2 compiled with MODULES"
+
+module-whatis   "$description"
+
+proc ModulesHelp { } {
+    global description url version git_hash
+    puts stderr "Description: $description"
+    puts stderr "Version:     $version"
+}
+
+conflict $name intel/mpi intel/compiler
+
+module          load    MODULES
+prepend-path    PATH                            $root/bin
+prepend-path    LD_LIBRARY_PATH                 $root/lib
+
+setenv          ABINIT_BASE                       $root
+setenv          ABINIT_VERSION                    $version

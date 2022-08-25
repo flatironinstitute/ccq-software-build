@@ -1,0 +1,46 @@
+39225c39225
+<       sd_hdf5_prefix=`${sd_hdf5_h5cc} -showconfig | grep 'Installation point:' | awk '{print $NF}'`
+---
+>       sd_hdf5_prefix=`cat ${HDF5_BASE}/lib/libhdf5.settings | grep 'Installation point:' | awk '{print $NF}'`
+39237c39237,39238
+<     sd_hdf5_flavor=`${sd_hdf5_h5cc} -showconfig | grep 'Flavor name:' | awk '{print $NF}'`
+---
+>     # Flavor does not appear in libhdf5.settings
+>     sd_hdf5_flavor=`cat ${HDF5_BASE}/lib/libhdf5.settings | grep 'Flavor name:' | awk '{print $NF}'`
+39249c39250
+<       sd_hdf5_has_fc=`${sd_hdf5_h5cc} -showconfig | grep 'Fortran:' | awk '{print $NF}'`
+---
+>       sd_hdf5_has_fc=`cat ${HDF5_BASE}/lib/libhdf5.settings | grep 'Fortran:' | awk '{print $NF}'`
+39259,39260c39260,39261
+<     tmp_hdf5_hl=`${sd_hdf5_h5cc} -showconfig | grep 'High[ \-][Ll]evel library:' | awk '{print $NF}'`
+<     if test "${tmp_hdf5_hl}" = "yes"; then
+---
+>     tmp_hdf5_hl=`cat ${HDF5_BASE}/lib/libhdf5.settings | grep 'High[ \-][Ll]evel library:' | awk '{print $NF}'`
+>     if test "${tmp_hdf5_hl}" = "ON"; then
+39262,39263c39263,39264
+<       test "${sd_hdf5_enable_fc}" = "yes" -a "${sd_hdf5_has_fc}" = "yes" && \
+<         sd_hdf5_libs_hl="-lhdf5hl_fortran ${sd_hdf5_libs_hl}"
+---
+>       test "${sd_hdf5_enable_fc}" = "yes" -a "${sd_hdf5_has_fc}" = "ON" && \
+>         sd_hdf5_libs_hl="-lhdf5_hl_fortran ${sd_hdf5_libs_hl}"
+39276c39277,39278
+<     sd_hdf5_libs_extra=`${sd_hdf5_h5cc} -showconfig | grep 'Extra libraries: ' | sed -e 's/.*Extra libraries: //'`
+---
+>     # libhdf5.settings has libs not given as "-l$lib1 -l$lib2" but instead as "$lib1;$lib2"
+>     sd_hdf5_libs_extra=`cat ${HDF5_BASE}/lib/libhdf5.settings | grep 'Extra libraries: ' | sed -e 's/.*Extra libraries: //; s/^/-l/; s/;/ -l/g'`
+39288c39290
+<       sd_hdf5_has_mpi=`${sd_hdf5_h5cc} -showconfig | grep 'Parallel HDF5:' | awk '{print $NF}'`
+---
+>       sd_hdf5_has_mpi=`cat ${HDF5_BASE}/lib/libhdf5.settings | grep 'Parallel HDF5:' | awk '{print $NF}'`
+39298c39300
+<     for arg in `${sd_hdf5_h5cc} -show`; do
+---
+>     for arg in `pkgconf --keep-system-cflags --keep-system-libs --cflags --libs hdf5`; do
+39311c39313
+<     sd_hdf5_libs="${tmp_hdf5_libdirs} ${sd_hdf5_libs_hl} ${sd_hdf5_libs} ${sd_hdf5_libs_extra}"
+---
+>     sd_hdf5_libs="${tmp_hdf5_libdirs}  ${sd_hdf5_libs_hl} ${sd_hdf5_libs} ${sd_hdf5_libs_extra}"
+39563c39565
+<           "${sd_hdf5_has_mpi}" = "yes"; then
+---
+>           "${sd_hdf5_has_mpi}" = "ON"; then

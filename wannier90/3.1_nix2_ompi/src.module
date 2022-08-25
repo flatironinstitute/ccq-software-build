@@ -23,3 +23,6 @@ conflict $name intel/mpi intel/compiler
 module          load    MODULES
 
 prepend-path    PATH    $root/bin
+
+setenv          WANNIER90_BASE                       $root
+setenv          WANNIER90_VERSION                    $version

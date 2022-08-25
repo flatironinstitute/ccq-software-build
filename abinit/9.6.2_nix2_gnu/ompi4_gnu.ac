@@ -1,0 +1,33 @@
+# -*- Autoconf -*-
+FC="mpifort"
+CC="mpicc"
+CXX="mpicc"
+
+CPPFLAGS_EXTRA="-m64"
+FCFLAGS_EXTRA="-m64"
+
+with_mpi="${OPENMPI_BASE}"
+enable_openmp="yes"
+enable_mpi_inplace="yes"
+enable_mpi_io="yes"
+
+with_linalg_flavor="mkl"
+LINALG_CPPFLAGS="-I${MKLROOT}/include"
+LINALG_FCFLAGS="-I${MKLROOT}/include"
+LINALG_LIBS="-L${MKLROOT}/lib/intel64 -lmkl_scalapack_lp64 -lmkl_gf_lp64 -lmkl_sequential -lmkl_blacs_openmpi_lp64 -lmkl_core -lpthread -lm -ldl"
+
+with_fft_flavor="dfti"
+
+with_hdf5="${HDF5_BASE}"
+
+with_netcdf="${NETCDF_BASE}"
+with_netcdf_fortran="${NETCDF_BASE}"
+enable_netcdf_default="yes"
+
+with_libxc="${LIBXC_BASE}"
+
+WANNIER90_CPPFLAGS="-I${WANNIER90_BASE}/bin"
+WANNIER90_FCFLAGS="-I${WANNIER90_BASE}/bin"
+WANNIER90_LIBS="-L${WANNIER90_BASE}/bin -lwannier -lwannier_seq"
+
+prefix=${INSTALLDIR}
