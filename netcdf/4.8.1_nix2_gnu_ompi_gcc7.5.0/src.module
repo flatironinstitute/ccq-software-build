@@ -1,0 +1,28 @@
+#
+# Module: netcdf with openmpi
+#
+
+set name netcdf
+set version 4.8.1_nix2_gnu_ompi_gcc7.5.0
+set     root        REPLACEDIR
+
+set     description "netcdf ver 4.8.1 parallel compiled with MODULES"
+
+module-whatis   "$description"
+
+proc ModulesHelp { } {
+    global description url version git_hash
+    puts stderr "Description: $description"
+    puts stderr "Version:     $version"
+}
+
+conflict $name intel/mpi intel/compiler
+
+module          load    MODULES
+prepend-path    PATH    $root/bin
+prepend-path    LD_LIBRARY_PATH                 $root/lib
+prepend-path    CPATH                           $root/include
+prepend-path    LIBRARY_PATH                    $root/lib
+
+setenv          NETCDF_BASE                       $root
+setenv          NETCDF_VERSION                    $version

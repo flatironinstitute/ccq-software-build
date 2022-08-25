@@ -1,0 +1,33 @@
+# -*- Autoconf -*-
+FC="mpifort"
+CC="mpicc"
+CXX="mpicc"
+#FCFLAGS_EXTRA="-fallow-argument-mismatch"
+#FFLAGS_EXTRA="-fallow-argument-mismatch"
+enable_64bit_flags="yes"
+
+enable_mpi="yes"
+enable_openmp="yes"
+enable_mpi_inplace="yes"
+enable_mpi_io="yes"
+with_mpi_incs="-I${OPENMPI_BASE}/include"
+with_mpi_libs="-L${OPENMPI_BASE}/lib -lmpi -lmpifort -lmpicxx"
+
+with_linalg_flavor="mkl"
+with_linalg_incs="-I${MKLROOT}/include"
+with_linalg_libs="-L${MKLROOT}/lib/intel64 -Wl,--no-as-needed -lmkl_scalapack_lp64 -lmkl_gf_lp64 -lmkl_sequential -lmkl_core -lmkl_blacs_openmpi_lp64 -lpthread -lm -ldl"
+
+with_fft_flavor="dfti"
+with_fft_incs="-I${MKLROOT}/include"
+with_fft_libs="-L${MKLROOT}/lib/intel64 -Wl,--no-as-needed -lmkl_scalapack_lp64 -lmkl_gf_lp64 -lmkl_sequential -lmkl_core -lmkl_blacs_openmpi_lp64 -lpthread -lm -ldl"
+
+# with_dft_flavor="wannier90+libxc" # just using wannier90 fallback for now
+with_dft_flavor="libxc" # wannier90 was failing, testing without
+
+
+with_trio_flavor="netcdf"
+enable_netcdf_default="yes"
+with_netcdf_incs="-I${NETCDF_BASE}/include"
+with_netcdf_libs="-L${NETCDF_BASE}/lib -lnetcdff -lnetcdf"
+
+prefix=${INSTALLDIR}
