@@ -3,7 +3,7 @@
 # installation script for QE with GNU OpenMPI toolchain
 
 # load modules
-MODULES="modules/2.0-20220630 gcc/11 openmpi/4 fftw intel-oneapi-mkl hdf5/mpi git libxc wannier90/3.1_nix2_gnu_ompi"
+MODULES="modules/2.0-20220630 gcc/11 openmpi/4 python/3.10 fftw intel-oneapi-mkl hdf5/mpi git libxc wannier90/3.1_nix2_gnu_ompi"
 module purge
 module load ${MODULES}
 
@@ -18,7 +18,7 @@ INSTALLDIR=$(pwd)/installation
 MODULEDIR=$(git rev-parse --show-toplevel)/modules
 
 # it seems that QE with configure has problems correctly resolving dependencies so stick to NCORES=1 for now
-NCORES=1
+NCORES=4
 export MKL_NUM_THREADS=1
 export OMP_NUM_THREADS=1
 
@@ -53,6 +53,15 @@ testlog="$(pwd)/${log/.log/_test.log}"
     mkdir build && cd build
     cmake -DCONFIG=gcc -DBLA_VENDOR=Intel10_64lp_seq -DCMAKE_INSTALL_PREFIX=${INSTALLDIR} ../
     make -j$NCORES
+    make install
+
+    # wan2respack
+    cd ${BUILDDIR}
+    git clone --depth 1 git@github.com:respack-dev/wan2respack.git wan2respack
+    cd wan2respack
+    mkdir build && cd build
+    cmake ../ -DCONFIG=gcc -DCMAKE_INSTALL_PREFIX=${INSTALLDIR}
+    make
     make install
 
 ) &> ${log}
