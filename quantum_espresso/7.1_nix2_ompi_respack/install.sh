@@ -22,6 +22,9 @@ NCORES=4
 export MKL_NUM_THREADS=1
 export OMP_NUM_THREADS=1
 
+#python interpreter header for wan2respack
+PYTHON='#!'$(which python3)
+
 log=build_$(date +%Y%m%d%H%M).log
 testlog="$(pwd)/${log/.log/_test.log}"
 (
@@ -59,6 +62,8 @@ testlog="$(pwd)/${log/.log/_test.log}"
     cd ${BUILDDIR}
     git clone --depth 1 git@github.com:respack-dev/wan2respack.git wan2respack
     cd wan2respack
+    # add shebang to all *.py files
+    sed -i "1s|^|$PYTHON \n|" util/wan2respack/*.py 
     mkdir build && cd build
     cmake ../ -DCONFIG=gcc -DCMAKE_INSTALL_PREFIX=${INSTALLDIR}
     make
