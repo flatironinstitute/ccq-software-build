@@ -40,6 +40,7 @@ testlog="$(pwd)/${log/.log/_test.log}"
 
     make -j$NCORES all
     make install
+    rm ${INSTALLDIR}/bin/wannier90.x
 
     # unfolding code
     cd ${BUILDDIR}

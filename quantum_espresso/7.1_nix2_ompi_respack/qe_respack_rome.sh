@@ -13,7 +13,7 @@
 
 module purge
 module load slurm
-module load quantum_espresso/7.1_nix2_ompi_respack
+module load quantum_espresso/7.1_nix2_gnu_ompi_respack
 
 export OMP_NUM_THREADS=16
 export OMP_STACKSIZE=512
@@ -28,15 +28,17 @@ mpirun --map-by socket:pe=$OMP_NUM_THREADS pw.x -pd .true. < SrVO3.nscf.in > SrV
 echo "pre-process"
 wan2respack.py -pp conf.toml
 
-echo "wannier90 run"
+echo "pw nscf wannier"
 mpirun --map-by socket:pe=$OMP_NUM_THREADS pw.x -pd .true. < SrVO3.nscf_wannier.in > SrVO3.nscf_wannier.out
 
-mpirun wannier90.x -pp SrVO3
+echo "wannier90 pp"
+wannier90.x -pp SrVO3
 
+echo "pw2wannier90"
 mpirun --map-by socket:pe=$OMP_NUM_THREADS pw2wannier90.x < SrVO3.pw2wan.in > SrVO3.pw2wan.out
-$WAN90_DIR/wannier90.x SrVO3
 
-mpirun wannier90.x -pp SrVO3
+echo "wannier90 run"
+mpirun wannier90.x SrVO3
 
 echo "wannier90 results to RESPACK inputs"
 wan2respack.py conf.toml
