@@ -62,6 +62,8 @@ testlog="$(pwd)/${log/.log/_test.log}"
     cd ${BUILDDIR}
     git clone --depth 1 git@github.com:respack-dev/wan2respack.git wan2respack
     cd wan2respack
+    # copy custom config file for cmake
+    cp ${INSTALLDIR}/../wan2respack.cmake ${BUILDDIR}/wan2respack/config/gcc.cmake
     # add shebang to all *.py files
     sed -i "1s|^|$PYTHON \n|" util/wan2respack/*.py 
     mkdir build && cd build
