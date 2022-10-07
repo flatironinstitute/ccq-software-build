@@ -22,7 +22,11 @@ conflict $name intel/mpi intel/compiler
 
 module          load    MODULES
 
-prepend-path    PATH    $root/bin
+prepend-path    PATH               $root/bin
+prepend-path    PATH               $root
+prepend-path    LIBRARY_PATH       $root/lib
+prepend-path    LD_LIBRARY_PATH    $root/lib
 
 setenv          WANNIER90_BASE                       $root
+setenv          WANNIER90_ROOT                       $root
 setenv          WANNIER90_VERSION                    $version

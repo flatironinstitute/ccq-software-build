@@ -8,16 +8,16 @@ module purge
 module load ${MODULES}
 
 BUILDINFO=3.1_nix2_gnu_ompi
-BUILDDIR=/tmp/triqs${BUILDINFO}_build
+BUILDDIR=/tmp/wannier90_${BUILDINFO}_build
 mkdir -p ${BUILDDIR}
-INSTALLDIR="$(pwd)"
+INSTALLDIR="$(pwd)/installation"
 MODULEDIR=$(git rev-parse --show-toplevel)/modules
 
 # w90 does not support parrallel build
 NCORES=1
 
+mkdir $INSTALLDIR
 log=build_$(date +%Y%m%d%H%M).log
-mkdir ${INSTALLDIR}/bin
 (
     cd ${BUILDDIR}
     echo ${PWD}
@@ -28,21 +28,23 @@ mkdir ${INSTALLDIR}/bin
     git clone -b develop --depth=1 https://github.com/wannier-developers/wannier90.git wannier90
 
     cd wannier90 
-    make clean
-
-    # first build seq lib version 
-    cp ${INSTALLDIR}/make.inc_seq make.inc
-    make -j$NCORES lib
-    cp libwannier.a ${INSTALLDIR}/bin/libwannier_seq.a
-    rm libwannier.a
-    make clean
+    make veryclean
     
     # build mpi version of wannier90
-    cp ${INSTALLDIR}/make.inc_parallel make.inc
-    make -j$NCORES wannier lib post w90chk2chk
+    cp ${INSTALLDIR}/../make.inc_parallel make.inc
+    make -j$NCORES PREFIX=${INSTALLDIR} wannier lib post w90chk2chk
+    make PREFIX=${INSTALLDIR} install
+    make veryclean
+
+    # build seq lib version 
+    cp ${INSTALLDIR}/../make.inc_seq make.inc
+    make -j$NCORES lib
+    cp libwannier.a ${INSTALLDIR}/lib/libwannier_seq.a
+
+    # cp include mod .o files
+    mkdir ${INSTALLDIR}/include
+    cp src/obj/* ${INSTALLDIR}/include/
     
-    # copy binaries
-    cp postw90.x wannier90.x libwannier.a w90chk2chk.x ${INSTALLDIR}/bin/
 ) &> ${log}
 
 mkdir -p $MODULEDIR/wannier90

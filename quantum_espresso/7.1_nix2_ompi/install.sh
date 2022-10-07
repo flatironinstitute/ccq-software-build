@@ -42,6 +42,8 @@ testlog="$(pwd)/${log/.log/_test.log}"
         -D QE_ENABLE_LIBXC=ON \
         -D QE_ENABLE_SCALAPACK=ON \
         -D QE_ENABLE_OPENMP=ON \
+        -D QE_WANNIER90_INTERNAL=OFF \
+        -D WANNIER90_ROOT=${WANNIER90_ROOT} \
         ../
 
 # build all
