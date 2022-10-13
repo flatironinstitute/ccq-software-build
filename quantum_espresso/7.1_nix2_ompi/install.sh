@@ -54,6 +54,7 @@ testlog="$(pwd)/${log/.log/_test.log}"
 
     # install it
     make install
+    cp bin/* ${INSTALLDIR}/bin/
 ) &> ${log}
 
 mkdir -p $MODULEDIR/quantum_espresso
