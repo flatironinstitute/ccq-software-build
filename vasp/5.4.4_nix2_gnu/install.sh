@@ -3,16 +3,22 @@
 # installation script for Vasp +  wannier90 using GNU OpenMPI toolchain
 
 # load modules
-MODULES="modules/1.58-20220124 gcc/10 openmpi fftw intel-oneapi-mkl wannier90/3.1_gnu_ompi"
+MODULES="modules/2.0-20220630 gcc/11 openmpi/4 fftw intel-oneapi-mkl git wannier90/3.1_nix2_gnu_ompi"
 module purge
-module load modules-new
 module load ${MODULES}
 
-BUILDDIR="/dev/shm/vasp_build_544_nixpack_gnu"
+BUILDDIR=/tmp/vasp_${BUILDINFO}_build
+
+MODULEDIR=$(git rev-parse --show-toplevel)/modules
+BUILDINFO=5.4.4_nix2_gnu
+BUILDDIR=/tmp/vasp_${BUILDINFO}_build
 mkdir -p ${BUILDDIR}
 INSTALLDIR="$(pwd)"
+MODULEDIR=$(git rev-parse --show-toplevel)/modules
 
 VASPFILE="vasp_544.tar.gz"
+
+NCORES=12
 
 # export Path for linking
 export libpath=${BUILDDIR}
@@ -31,7 +37,7 @@ log=build_$(date +%Y%m%d%H%M).log
     # copy makefile and include wannier lib
     cp ${INSTALLDIR}/makefile.include ${BUILDDIR}/
     
-    cp ${INSTALLDIR}/../../wannier90/3.1_nixpack_ompi/bin/libwannier_seq.a ${BUILDDIR}/
+    cp ${WANNIER90_ROOT}/lib/libwannier_seq.a ${BUILDDIR}/
     
     mkdir ${BUILDDIR}/build
     mkdir ${BUILDDIR}/bin
@@ -44,10 +50,8 @@ log=build_$(date +%Y%m%d%H%M).log
 
 ) &> ${log}
     
-mkdir -p ../../modules/vasp
+mkdir -p $MODULEDIR/vasp
 # make the template a proper module 
-echo '#%Module' > ../../modules/vasp/5.4.4_nixpack_ompi
+echo '#%Module' > $MODULEDIR/vasp/$BUILDINFO
 # update module template
-sed "s|REPLACEDIR|${INSTALLDIR}|g;s|MODULES|${MODULES}|g" < src.module >> ../../modules/vasp/5.4.4_nixpack_ompi
-
-
+sed "s|REPLACEDIR|${INSTALLDIR}|g;s|MODULES|${MODULES}|g" < src.module >> $MODULEDIR/vasp/$BUILDINFO
