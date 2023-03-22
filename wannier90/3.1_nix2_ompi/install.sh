@@ -3,7 +3,7 @@
 # installation script for wannier90 with GNU OpenMPI toolchain
 
 # load modules
-MODULES="modules/2.0-20220630 gcc/11 openmpi/4 fftw intel-oneapi-mkl python/3.10"
+MODULES="modules/2.0-20220630 gcc/11 fftw intel-oneapi-mkl python/3.10"
 module purge
 module load ${MODULES}
 
@@ -23,23 +23,16 @@ log=build_$(date +%Y%m%d%H%M).log
     echo ${PWD}
     module list
 
-    # clone version unstable from github
-    # 3.1. has some MPI segfault issues
-    git clone -b develop --depth=1 https://github.com/wannier-developers/wannier90.git wannier90
+    git clone -b v3.1.0 --depth=1 https://github.com/wannier-developers/wannier90.git wannier90
 
     cd wannier90 
     make veryclean
     
-    # build mpi version of wannier90
-    cp ${INSTALLDIR}/../make.inc_parallel make.inc
+    # build seq version of wannier90
+    cp ${INSTALLDIR}/../make.inc_seq make.inc
     make -j$NCORES PREFIX=${INSTALLDIR} wannier lib post w90chk2chk
     make PREFIX=${INSTALLDIR} install
     make veryclean
-
-    # build seq lib version 
-    cp ${INSTALLDIR}/../make.inc_seq make.inc
-    make -j$NCORES lib
-    cp libwannier.a ${INSTALLDIR}/lib/libwannier_seq.a
 
     # cp include mod .o files
     mkdir ${INSTALLDIR}/include

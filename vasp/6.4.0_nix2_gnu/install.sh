@@ -1,7 +1,8 @@
 #!/bin/bash
 
 # installation script for Vasp +  wannier90 using GNU OpenMPI toolchain
-
+# use release 3.1.0 of wannier90 / dev wannier90 branch (that allows MPI) messes up ordering of wannier functions! 
+#
 # load modules
 MODULES="modules/2.0-20220630 gcc/11 openmpi/4 fftw intel-oneapi-mkl hdf5/mpi git wannier90/3.1_nix2_gnu_ompi"
 module purge
@@ -10,13 +11,13 @@ module load ${MODULES}
 BUILDDIR=/tmp/vasp_${BUILDINFO}_build
 
 MODULEDIR=$(git rev-parse --show-toplevel)/modules
-BUILDINFO=6.3.2_nix2_gnu
+BUILDINFO=6.4.0_nix2_gnu
 BUILDDIR=/tmp/vasp_${BUILDINFO}_build
 mkdir -p ${BUILDDIR}
 INSTALLDIR="$(pwd)"
 MODULEDIR=$(git rev-parse --show-toplevel)/modules
 
-VASPFILE="vasp.6.3.2"
+VASPFILE="vasp.6.4.0"
 
 export MKL_NUM_THREADS=1
 export OMP_NUM_THREADS=1

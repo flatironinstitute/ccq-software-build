@@ -3,7 +3,7 @@
 # installation script for triqs3 stable branch with clang OpenMPI toolchain with new spack modules
 
 # load modules
-MODULES="modules/2.0-20220630 gcc/11 flexiblas openmpi cmake gmp fftw nfft hdf5/mpi boost/libcpp-1.78.0 python/3.10 python-mpi/3.10 intel-oneapi-mkl llvm/13"
+MODULES="modules/2.0-20220630 gcc/11 flexiblas openmpi cmake gmp fftw nfft hdf5/mpi boost/libcpp-1.78.0 python/3.10 python-mpi/3.10 intel-oneapi-mkl llvm/13 eigen"
 module purge
 module load ${MODULES}
 
@@ -182,6 +182,20 @@ testlog="$(pwd)/${log/.log/_test.log}"
     mkdir -p hartree_fock.build && cd hartree_fock.build
 
     cmake ../hartree_fock.src
+    # make / test / install
+    make
+    make test &>> ${testlog}
+    make install
+    ################
+
+    cd ${BUILDDIR}
+    # install Nevanlinna
+    git clone -b Hardy --depth 1 git@github.com:TRIQS/Nevanlinna.git nevanlinna.src
+    # fetch latest changes
+    cd nevanlinna.src && git pull && cd ..
+    mkdir -p nevanlinna.build && cd nevanlinna.build
+
+    cmake ../nevanlinna.src
     # make / test / install
     make
     make test &>> ${testlog}
