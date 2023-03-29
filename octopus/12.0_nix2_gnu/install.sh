@@ -1,6 +1,9 @@
 #!/bin/bash
 
-# installation script for abinit with gnu/openmpi toolchain and parallel netcdf
+# installation script for octopus with gnu/openmpi toolchain and parallel netcdf
+# need to be able to load the netcdf module
+MODULEDIR=$(git rev-parse --show-toplevel)/modules
+module use --append ${MODULEDIR}
 
 # load modules
 MODULES="modules/2.0-20220630 gcc/11 openmpi/4 openblas/threaded-0.3.20 hdf5/mpi netcdf/4.8.1_nix2_gnu_ompi fftw/mpi libxc"
@@ -13,8 +16,6 @@ mkdir $BUILDDIR
 
 INSTALLDIR="$(pwd)/installation"
 
-MODULEDIR=$(git rev-parse --show-toplevel)/modules
-
 NCORES=12
 
 log=build_$(date +%Y%m%d%H%M).log
@@ -22,10 +23,14 @@ log=build_$(date +%Y%m%d%H%M).log
     cd ${BUILDDIR}
     
     module list
-    wget --content-disposition https://octopus-code.org/down.php?file=12.0/octopus-12.0.tar.gz
+
+    wget https://gitlab.com/octopus-code/octopus/-/archive/12.0/octopus-12.0.tar.gz
     tar -xvf octopus-12.0.tar.gz
 
-    cd octopus-12.0
+    cd octopus-*/external_libs/spglib-1.9.9
+    aclocal && autoheader && libtoolize && automake -acf && autoconf
+    cd ../../
+    aclocal -I m4 && autoheader && libtoolize && automake -acf && autoconf
 
     export LDFLAGS="-L$OPENBLAS_BASE/lib -lopenblas -lm -lpthread -lgfortran -lm -lpthread -lgfortran"
     export CFLAGS="-I$OPENBLAS_ROOT/include"
