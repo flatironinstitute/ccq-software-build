@@ -31,4 +31,4 @@ Some benchmark results of this version (timing from cpu time LOOP+ in OUTCAR):
 
 This shows, that MPI scaling is better with skylake, but nevertheless Vasp benefits a lot from the 128 cores per node on rome, outperforming one skylake node being 4.6 times faster without special adjustments. However, one can also see that with that many cores per node, KPAR becomes more important, as MPI is consuming even on 1 node too much time until KPAR parrellism is activated. A `KPAR=2` setting in Vasp maximizes 1 node performance to a speedup of 6.4. Compared to one skylake node. But, 3 skylake nodes with a similar amount of cores than one rome node have a speed up of 7.8, outperforming the rome node slightly. Hence, the new AMD epyc rome nodes are really fast, but benefit a lot from proper setting of parallelization flags in Vasp.
 
-Vasp 6.3.0 is now also compiled with HDF5 and OpenMP support. However, OpenMP seems to be very slow in the tasks benchmarked here.
+Vasp 6.4.0 is now also compiled with HDF5 and OpenMP support. OpenMP threading works reasonably well.
