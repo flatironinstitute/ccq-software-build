@@ -1,4 +1,4 @@
-# Vasp 6.1 
+# Vasp 6.4.0
 
 
 ## GNU OMPI4 MKL build chain
@@ -14,7 +14,10 @@ Some benchmark results of this version (timing from cpu time LOOP+ in OUTCAR):
 | 1      | 40             | skylake  | 6     | 1    | 3434.7 (ref) | 1.00    |
 | 1      | 40             | rome     | 6     | 1    | 2988.4       | 1.15    |
 | 1      | 64             | rome     | 8     | 1    | 1175.2       | 2.92    |
+| 1      | 64             | rome     | 8     | 2    | 1179.5       | 2.91    |
+| 1      | 64             | icelake  | 8     | 2    | 636.5        | 5.40    |
 | 1      | 128            | rome     | 8     | 1    | 746.4        | 4.60    |
+| 1      | 128            | rome     | 8     | 2    | 663.4        | 5.18    |
 | 1      | 128            | rome     | 16    | 1    | 642.1        | 5.35    |
 | 1      | 128            | rome     | 16    | 2    | 534.9        | 6.42    |
 | 1      | 128            | rome AVX | 16    | 2    | 527.4        | 6.51    |
