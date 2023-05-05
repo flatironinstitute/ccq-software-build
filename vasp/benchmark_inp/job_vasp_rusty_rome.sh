@@ -1,8 +1,8 @@
 #!/bin/bash
 #SBATCH --job-name="vasp-test-rome"
 #SBATCH --time=01:00:00
-#SBATCH --nodes=2
-#SBATCH --ntasks-per-node=128
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=64
 #SBATCH --ntasks-per-core=1
 #SBATCH --constraint=rome 
 #SBATCH --partition=ccq
@@ -17,12 +17,8 @@ export OMP_NUM_THREADS=1
 ulimit -s unlimited
 
 module purge
-module load vasp/6.3.0_nixpack_gnu slurm
-######################
-# for skylake jobs!!
-# comment this line for skylake jobs:
-#module load openmpi-opa
-#######################
+module load slurm
+module load vasp/6.4.0_nix2_gnu
 
 # with map by socket a maximum of number of cores per physical cores are spawned! This is cores per node/2
 # if more threads are needed switch socket -> node

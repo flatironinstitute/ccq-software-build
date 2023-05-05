@@ -13,6 +13,6 @@ ISMEAR = 0
 SIGMA = 0.001
 
 # parallelization
-NCORE   = 16
+NCORE   = 8
 NSIM   = 4
 KPAR = 2
