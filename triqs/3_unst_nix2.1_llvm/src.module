@@ -1,0 +1,45 @@
+#
+# Modul triqs unstable compiled with intel oneAPI
+#
+
+set     name        triqs 
+set     version     3_unst_nix2.1_llvm
+set     root        REPLACEDIR 
+
+set     description "triqs unstable including dfttools cthyb etc" 
+
+module-whatis   "$description"
+
+proc ModulesHelp { } {
+    global description url version git_hash
+    puts stderr "Description: $description"
+    puts stderr "Version:     $version"
+}
+
+
+module          load    MODULES
+
+setenv CC       clang
+setenv CXX      clang++
+setenv CXXFLAGS "-stdlib=libc++ -Wno-register -march=broadwell"
+setenv FC       gfortran
+setenv BLA_VENDOR FlexiBLAS
+
+setenv          TRIQS_ROOT          $root
+setenv          ITENSOR_ROOT        $root
+setenv          INSTALLDIR          $root
+setenv          TRIQS_VERSION       $version
+setenv          MKL_NUM_THREADS     1
+setenv          MKL_INTERFACE_LAYER GNU,LP64
+setenv          MKL_THREADING_LAYER SEQUENTIAL
+setenv          UCX_LOG_LEVEL       error
+
+prepend-path    PATH                $root/bin
+prepend-path    CPLUS_INCLUDE_PATH  $root/include
+prepend-path    LIBRARY_PATH        $root/lib
+prepend-path    LD_LIBRARY_PATH     $root/lib
+prepend-path    PYTHONPATH          $root/lib/python3.10/site-packages
+prepend-path    CMAKE_PREFIX_PATH   $root/lib/cmake/triqs
+prepend-path    CMAKE_PREFIX_PATH   $root/lib/cmake/cpp2py
+
+
