@@ -13,15 +13,11 @@
 
 # set OMP_NUM_THREADS so that times ntasks-per-node is the total number of cores on each node
 export OMP_NUM_THREADS=1
+export HDF5_USE_FILE_LOCKING=FALSE
 
 module purge
 module load slurm 
-module load triqs/3_unst_llvm_ompi
-######################
-# for skylake jobs!!
-# comment this line for skylake jobs:
-#module load openmpi-opa
-#######################
+module load triqs/3_unst_nix2.1_llvm
 
 # with map by socket a maximum of number of cores per physical cores are spawned! This is cores per node/2
 # if more threads are needed switch socket -> node
