@@ -3,7 +3,7 @@
 # installation script for QE with GNU OpenMPI toolchain
 
 # load modules
-MODULES="modules/2.1.1-20230405 gcc/10 openmpi/4 fftw intel-oneapi-mkl hdf5/mpi git libxc wannier90/dev_nix2.1_gnu_ompi cmake"
+MODULES="modules/2.1.1-20230405 gcc/11.3.0 openmpi/4 fftw intel-oneapi-mkl hdf5/mpi git libxc wannier90/dev_nix2.1_gnu_ompi cmake"
 module purge
 module load ${MODULES}
 

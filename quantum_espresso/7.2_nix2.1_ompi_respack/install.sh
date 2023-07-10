@@ -3,7 +3,7 @@
 # installation script for QE with GNU OpenMPI toolchain
 
 # load modules
-MODULES="modules/2.1.1-20230405 gcc/10 openmpi/4 python/3.10 fftw intel-oneapi-mkl hdf5/mpi git libxc wannier90/dev_nix2.1_gnu_ompi"
+MODULES="modules/2.1.1-20230405 gcc/11.3.0 openmpi/4 python/3.10 fftw intel-oneapi-mkl hdf5/mpi git libxc wannier90/dev_nix2.1_gnu_ompi"
 module purge
 module load ${MODULES}
 
@@ -18,7 +18,9 @@ INSTALLDIR=$(pwd)/installation
 MODULEDIR=$(git rev-parse --show-toplevel)/modules
 
 # it seems that QE with configure has problems correctly resolving dependencies so stick to NCORES=1 for now
-NCORES=4
+NCORES=1
+export CC=gcc
+export CXX=g++
 export MKL_NUM_THREADS=1
 export OMP_NUM_THREADS=1
 
@@ -32,7 +34,7 @@ testlog="$(pwd)/${log/.log/_test.log}"
     
     module list
 
-    # clone version 7.1 from github
+    # clone version 7.2 from github
     git clone -b qe-7.2 --depth 1 https://github.com/QEF/q-e.git qe
     cd qe
     
@@ -42,7 +44,7 @@ testlog="$(pwd)/${log/.log/_test.log}"
     make install
     rm ${INSTALLDIR}/bin/wannier90.x
 
-    # unfolding code
+     #unfolding code
     cd ${BUILDDIR}
     git clone --depth 1 https://bitbucket.org/bonfus/unfold-x.git 
     cd unfold-x
@@ -54,7 +56,7 @@ testlog="$(pwd)/${log/.log/_test.log}"
     cd ${BUILDDIR}
     tar -xf ${INSTALLDIR}/../RESPACK-20200113.tar.gz
     cd RESPACK-20200113
-    mkdir build && cd build
+    mkdir -p build && cd build
     cmake -DCONFIG=gcc -DBLA_VENDOR=Intel10_64lp_seq -DCMAKE_INSTALL_PREFIX=${INSTALLDIR} ../
     make -j$NCORES
     make install
@@ -67,7 +69,7 @@ testlog="$(pwd)/${log/.log/_test.log}"
     cp ${INSTALLDIR}/../wan2respack.cmake ${BUILDDIR}/wan2respack/config/gcc.cmake
     # add shebang to all *.py files
     sed -i "1s|^|$PYTHON \n|" util/wan2respack/*.py 
-    mkdir build && cd build
+    mkdir -p build && cd build
     cmake ../ -DCONFIG=gcc -DCMAKE_INSTALL_PREFIX=${INSTALLDIR}
     make
     make install

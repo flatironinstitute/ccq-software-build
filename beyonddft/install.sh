@@ -65,7 +65,7 @@ testlog="$(pwd)/${log/.log/_test.log}"
 
     # install beyondDFT
     cd ${BUILDDIR}
-    git clone -b main --depth 1 git@github.com:mmorale3/BeyondDFT.git bdft
+    git clone -b embedding --depth 1 git@github.com:mmorale3/BeyondDFT.git bdft
     # fetch latest changes
     cd bdft && git pull
     mkdir -p build && cd build

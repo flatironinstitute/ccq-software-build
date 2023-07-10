@@ -27,3 +27,7 @@ prepend-path    LIBRARY_PATH        $root/lib64
 
 setenv          MKL_NUM_THREADS     1
 setenv          OMP_NUM_THREADS     1
+setenv CC       gcc
+setenv CXX      g++
+setenv CXXFLAGS "-stdlib=libc++ -Wno-register -march=broadwell"
+setenv FC       gfortran
