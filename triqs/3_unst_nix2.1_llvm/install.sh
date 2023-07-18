@@ -160,6 +160,20 @@ testlog="$(pwd)/${log/.log/_test.log}"
     ################
 
     cd ${BUILDDIR}
+    # install Hartree Fock
+    git clone -b unstable --depth 1 https://github.com/triqs/hartree_fock.git hartree_fock.src
+    # fetch latest changes
+    cd hartree_fock.src && git pull && cd ..
+    mkdir -p hartree_fock.build && cd hartree_fock.build
+
+    cmake ../hartree_fock.src
+    # make / test / install
+    make
+    make test &>> ${testlog}
+    make install
+    ################
+
+    cd ${BUILDDIR}
     # install solid_dmft
     git clone -b unstable --depth 1 https://github.com/flatironinstitute/solid_dmft.git solid_dmft.src
     # fetch latest changes
@@ -175,22 +189,8 @@ testlog="$(pwd)/${log/.log/_test.log}"
     ################
     
     cd ${BUILDDIR}
-    # install Hartree Fock
-    git clone -b unstable --depth 1 https://github.com/triqs/hartree_fock.git hartree_fock.src
-    # fetch latest changes
-    cd hartree_fock.src && git pull && cd ..
-    mkdir -p hartree_fock.build && cd hartree_fock.build
-
-    cmake ../hartree_fock.src
-    # make / test / install
-    make
-    make test &>> ${testlog}
-    make install
-    ################
-
-    cd ${BUILDDIR}
     # install Nevanlinna
-    git clone -b Hardy --depth 1 git@github.com:TRIQS/Nevanlinna.git nevanlinna.src
+    git clone -b unstable --depth 1 git@github.com:TRIQS/Nevanlinna.git nevanlinna.src
     # fetch latest changes
     cd nevanlinna.src && git pull && cd ..
     mkdir -p nevanlinna.build && cd nevanlinna.build

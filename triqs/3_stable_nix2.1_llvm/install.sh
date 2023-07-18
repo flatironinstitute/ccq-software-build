@@ -22,7 +22,7 @@ export MKL_NUM_THREADS=1
 export OMP_NUM_THREADS=12
 NCORES=12
 
-BUILDINFO=3_stable_nix2_llvm
+BUILDINFO=3_stable_nix2.1_llvm
 BUILDDIR=/tmp/triqs${BUILDINFO}_build
 INSTALLDIR=$(pwd)/installation
 MODULEDIR=$(git rev-parse --show-toplevel)/modules

@@ -1,0 +1,66 @@
+# Precompiler options
+CPP_OPTIONS= -DHOST=\"LinuxGNU\"\
+             -DMPI -DMPI_BLOCK=32000 \
+             -Duse_collective \
+             -DCACHE_SIZE=16000 \
+             -Davoidalloc \
+             -Duse_bse_te \
+             -Dtbdyn \
+             -Dvasp6 \
+             -DscaLAPACK \
+             -DVASP2WANNIER90 \
+             -Dfock_dblbuf \
+             -D_OPENMP \
+             -DVASP_HDF5
+
+CPP        = gcc -E -P -C -w $*$(FUFFIX) >$*$(SUFFIX) $(CPP_OPTIONS)
+
+# problems in gcc>10 make it necessary to make allow argument mismatch to warning instead of throwing an error
+FC         = mpif90 -m64 -I${MKLROOT}/include -fallow-argument-mismatch -fopenmp
+FCL        = mpif90 -m64 -I${MKLROOT}/include -fopenmp
+
+FREE       = -ffree-form -ffree-line-length-none
+
+FFLAGS     = -w -ffpe-summary=invalid,zero,overflow
+
+OFLAG      = -O3 -march=broadwell
+OFLAG_IN   = $(OFLAG)
+DEBUG      = -O0
+
+LIBDIR     = /usr/lib/x86_64-linux-gnu
+
+# link dynamically agains scalapack and blacs from intel mkl, note intel mkl >2019 does not work
+LLIBS =  -L${MKLROOT}/lib/intel64 -Wl,--no-as-needed -lmkl_scalapack_lp64 -lmkl_gf_lp64 -lmkl_sequential -lmkl_core -lmkl_blacs_openmpi_lp64 -lpthread -lm -ldl
+
+LLIBS += ${libpath}/libwannier.a
+
+# FFTW
+LLIBS += -L${FFTW_BASE}/lib -lfftw3 -lfftw3_omp
+
+INCS       = -I/usr/include -I${MKLROOT}/include -I${FFTW_BASE}/include
+
+OBJECTS    = fftmpiw.o fftmpi_map.o  fftw3d.o  fft3dlib.o
+OBJECTS_O1 += fftw3d.o fftmpi.o fftmpiw.o
+OBJECTS_O2 += fft3dlib.o
+
+# HDF5-support (optional but strongly recommended)
+LLIBS      += -L$(HDF5_ROOT)/lib -lhdf5_fortran
+INCS       += -I$(HDF5_ROOT)/include
+
+# For what used to be vasp.5.lib
+CPP_LIB    = $(CPP)
+FC_LIB     = $(FC)
+CC_LIB     = gcc
+CFLAGS_LIB = -O
+FFLAGS_LIB = -O1
+FREE_LIB   = $(FREE)
+
+OBJECTS_LIB= linpack_double.o
+
+# For the parser library
+CXX_PARS   = g++
+LLIBS      += -lstdc++
+
+# Normally no need to change this
+SRCDIR     = ../../src
+BINDIR     = ../../bin

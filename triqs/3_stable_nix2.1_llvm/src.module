@@ -3,7 +3,7 @@
 #
 
 set     name        triqs 
-set     version     3_stable_nix2_llvm
+set     version     3_stable_nix2.1_llvm
 set     root        REPLACEDIR 
 
 set     description "triqs 3.x stable release including dfttools cthyb etc" 
