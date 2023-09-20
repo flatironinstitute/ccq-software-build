@@ -38,6 +38,8 @@ prepend-path    PATH                $root/bin
 prepend-path    CPLUS_INCLUDE_PATH  $root/include
 prepend-path    LIBRARY_PATH        $root/lib
 prepend-path    LD_LIBRARY_PATH     $root/lib
+prepend-path    LIBRARY_PATH        $root/lib64
+prepend-path    LD_LIBRARY_PATH     $root/lib64
 prepend-path    PYTHONPATH          $root/lib/python3.10/site-packages
 prepend-path    CMAKE_PREFIX_PATH   $root/lib/cmake/triqs
 prepend-path    CMAKE_PREFIX_PATH   $root/lib/cmake/cpp2py
