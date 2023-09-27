@@ -30,6 +30,7 @@ setenv          ITENSOR_ROOT        $root
 setenv          INSTALLDIR          $root
 setenv          TRIQS_VERSION       $version
 setenv          MKL_NUM_THREADS     1
+setenv          NEVANLINNA_NUM_THREADS 8
 setenv          MKL_INTERFACE_LAYER GNU,LP64
 setenv          MKL_THREADING_LAYER SEQUENTIAL
 setenv          UCX_LOG_LEVEL       error

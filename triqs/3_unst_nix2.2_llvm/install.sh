@@ -3,7 +3,7 @@
 # installation script for triqs3 stable branch with clang OpenMPI toolchain with new spack modules
 
 # load modules
-MODULES="modules/2.2-20230808 gcc flexiblas openmpi cmake gmp fftw nfft hdf5/mpi boost/libcpp-1.82.0 python/3.10 python-mpi/3.10 intel-oneapi-mkl llvm/16 eigen"
+MODULES="modules/2.2-20230808 gcc flexiblas openmpi cmake gmp fftw nfft hdf5/mpi boost/libcpp-1.82.0 python/3.10 python-mpi/3.10 intel-oneapi-mkl llvm/16 eigen mpfr"
 module purge
 module load ${MODULES}
 
@@ -20,6 +20,7 @@ export MKL_INTERFACE_LAYER=GNU,LP64
 export MKL_THREADING_LAYER=SEQUENTIAL
 export MKL_NUM_THREADS=1
 export OMP_NUM_THREADS=12
+export NEVANLINNA_NUM_THREADS=4
 NCORES=12
 
 BUILDINFO=3_unst_nix2.2_llvm
@@ -131,6 +132,20 @@ testlog="$(pwd)/${log/.log/_test.log}"
     make install
     ################
 
+    cd ${BUILDDIR}
+    # install Nevanlinna
+    git clone -b unstable --depth 1 https://github.com/TRIQS/Nevanlinna.git Nevanlinna.src
+    # fetch latest changes
+    cd Nevanlinna.src && git pull && cd ..
+    rm -rf Nevanlinna.build && mkdir -p Nevanlinna.build && cd Nevanlinna.build
+
+    cmake ../Nevanlinna.src
+    # make / test / install
+    make -j$NCORES
+    ctest -j$NCORES &>> ${testlog}
+    make install
+
+    ################
     cd ${BUILDDIR}
     # install TPRF
     git clone -b unstable --depth 1 https://github.com/TRIQS/tprf.git tprf.src
