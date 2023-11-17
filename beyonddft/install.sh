@@ -3,7 +3,7 @@
 # installation script for triqs3 stable branch with clang OpenMPI toolchain with new spack modules
 
 # load modules
-MODULES="modules/2.1.1-20230405 gcc/11.3.0 flexiblas openmpi cmake gmp fftw nfft hdf5/mpi boost/libcpp-1.80.0 python/3.10 python-mpi/3.10 intel-oneapi-mkl"
+MODULES="modules/2.2-20230808 gcc/11.4.0 flexiblas openmpi cmake gmp fftw nfft hdf5/mpi boost/libcpp-1.82.0 intel-oneapi-mkl"
 module purge
 module load ${MODULES}
 
@@ -22,7 +22,7 @@ export MKL_NUM_THREADS=1
 export OMP_NUM_THREADS=12
 NCORES=12
 
-BUILDINFO=nix2_gnu
+BUILDINFO=nix2.2_gnu
 BUILDDIR=/tmp/beyondDFT_${BUILDINFO}_build
 INSTALLDIR=$(pwd)/installation
 MODULEDIR=$(git rev-parse --show-toplevel)/modules
@@ -45,13 +45,13 @@ testlog="$(pwd)/${log/.log/_test.log}"
     module list
 
     # install SLATE
-    SLVER=slate-2022.07.00
+    SLVER=slate-2023.08.25
     cd ${BUILDDIR}
-    wget https://github.com/icl-utk-edu/slate/releases/download/v2022.07.00/${SLVER}.tar.gz
+    wget https://github.com/icl-utk-edu/slate/releases/download/v2023.08.25/${SLVER}.tar.gz
     tar -xf ${SLVER}.tar.gz
     cd ${SLVER}
     mkdir -p build && cd build
-    cmake ../ -Dblas=mkl -DCMAKE_INSTALL_PREFIX=${INSTALLDIR}
+    cmake ../ -Dblas=mkl -DMKL_INTERFACE_FULL=gf_lp64 -DMKL_MPI=openmpi -DMKL_THREADING=sequential -DCMAKE_INSTALL_PREFIX=${INSTALLDIR}
     make -j$NCORES
     make install
 
@@ -65,7 +65,7 @@ testlog="$(pwd)/${log/.log/_test.log}"
 
     # install beyondDFT
     cd ${BUILDDIR}
-    git clone -b embedding --depth 1 git@github.com:mmorale3/BeyondDFT.git bdft
+    git clone -b unfold_bz --depth 1 git@github.com:mmorale3/BeyondDFT.git bdft
     # fetch latest changes
     cd bdft && git pull
     mkdir -p build && cd build

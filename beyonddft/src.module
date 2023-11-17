@@ -3,7 +3,7 @@
 #
 
 set     name        triqs 
-set     version     beyondDFT_nix2_gnu
+set     version     beyondDFT_nix2.2_gnu
 set     root        REPLACEDIR 
 
 set     description "beyondDFT package" 
