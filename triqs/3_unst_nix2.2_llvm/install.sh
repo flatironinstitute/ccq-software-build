@@ -21,7 +21,7 @@ export MKL_THREADING_LAYER=SEQUENTIAL
 export MKL_NUM_THREADS=1
 export OMP_NUM_THREADS=12
 export NEVANLINNA_NUM_THREADS=4
-NCORES=12
+NCORES=20
 
 BUILDINFO=3_unst_nix2.2_llvm
 BUILDDIR=/tmp/triqs${BUILDINFO}_build
@@ -98,6 +98,21 @@ testlog="$(pwd)/${log/.log/_test.log}"
     rm -rf ctseg.build && mkdir -p ctseg.build && cd ctseg.build
 
     cmake ../ctseg.src
+    # make / test / install
+    make -j$NCORES
+    ctest -j$NCORES &>> ${testlog}
+    make install
+
+    #################
+
+    cd ${BUILDDIR}
+    # install w2dynamics interface
+    git clone -b 3.2.x --depth 1 git@github.com:TRIQS/w2dynamics_interface.git w2dyn.src
+    # fetch latest changes
+    cd w2dyn.src && git pull && cd ..
+    rm -rf w2dyn.build && mkdir -p w2dyn.build && cd w2dyn.build
+
+    cmake ../w2dyn.src
     # make / test / install
     make -j$NCORES
     ctest -j$NCORES &>> ${testlog}
