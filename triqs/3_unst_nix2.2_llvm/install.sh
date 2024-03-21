@@ -203,21 +203,6 @@ testlog="$(pwd)/${log/.log/_test.log}"
     make install
     ################
 
-    cd ${BUILDDIR}
-    # install solid_dmft
-    git clone -b unstable --depth 1 https://github.com/flatironinstitute/solid_dmft.git solid_dmft.src
-    # fetch latest changes
-    cd solid_dmft.src && git pull && cd ..
-    rm -rf solid_dmft.build && mkdir -p solid_dmft.build && cd solid_dmft.build
-
-    cmake ../solid_dmft.src
-    # make / test / install
-    make -j$NCORES
-    # tests leverage MPI:
-    make test &>> ${testlog}
-    make install
-    ################
-
     # install ForkTPS
     cd ${BUILDDIR}
     git clone -b unstable --depth 1 git@github.com:TRIQS/forktps.git forktps.src
@@ -229,6 +214,21 @@ testlog="$(pwd)/${log/.log/_test.log}"
     # make / test / install
     make -j$NCORES
     # tests leverage MPI / OpenMP
+    make test &>> ${testlog}
+    make install
+    ################
+
+    cd ${BUILDDIR}
+    # install solid_dmft
+    git clone -b unstable --depth 1 https://github.com/flatironinstitute/solid_dmft.git solid_dmft.src
+    # fetch latest changes
+    cd solid_dmft.src && git pull && cd ..
+    rm -rf solid_dmft.build && mkdir -p solid_dmft.build && cd solid_dmft.build
+
+    cmake ../solid_dmft.src
+    # make / test / install
+    make -j$NCORES
+    # tests leverage MPI:
     make test &>> ${testlog}
     make install
     ################
