@@ -31,6 +31,12 @@ MODULEDIR=$(git rev-parse --show-toplevel)/modules
 mkdir -p $BUILDDIR
 mkdir -p $INSTALLDIR/lib/python3.11/site-packages
 
+# in case you are using a python virtual environment set it now here
+#source /mnt/home/ahampel/py_venv/311/bin/activate
+# to have cmake pick up the virtual environment, unset PYTHON_ROOT
+# see cmake --help-policy CMP0144
+unset PYTHON_ROOT
+
 export ITENSOR_ROOT=${INSTALLDIR}
 export TRIQS_ROOT=${INSTALLDIR}
 export PATH=${INSTALLDIR}/bin:$PATH
@@ -211,7 +217,7 @@ testlog="$(pwd)/${log/.log/_test.log}"
     cd forktps.src && git pull && cd ..
     mkdir -p forktps.build && cd forktps.build
 
-    cmake ../forktps.src -DBUILD_SHARED_LIBS=ON -DBLAS_LIBRARIES="-L${FLEXIBLAS_ROOT}/libi64 -lflexiblas -lpthread" -Dgpu_backend=none
+    cmake ../forktps.src -DBLAS_LIBRARIES="-L${FLEXIBLAS_ROOT}/libi64 -lflexiblas -lpthread" -Dgpu_backend=none
     # make / test / install
     make -j$NCORES
     # tests leverage MPI / OpenMP
@@ -226,11 +232,11 @@ testlog="$(pwd)/${log/.log/_test.log}"
     cd solid_dmft.src && git pull && cd ..
     rm -rf solid_dmft.build && mkdir -p solid_dmft.build && cd solid_dmft.build
 
-    cmake ../solid_dmft.src
+    cmake ../solid_dmft.src -DMPIEXEC_MAX_NUMPROCS=4 -DTest_GW_embedding=ON
     # make / test / install
     make -j$NCORES
     # tests leverage MPI:
-    make test &>> ${testlog}
+    ctest -j4 &>> ${testlog}
     make install
     ################
 
