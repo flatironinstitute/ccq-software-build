@@ -1,0 +1,26 @@
+BootStrap: docker
+From: ubuntu:22.04
+
+%post
+    apt update
+    apt upgrade -y
+    DEBIAN_FRONTEND=noninteractive apt install -y \
+      wget bzip2 libgomp1 libglu1-mesa packagekit-gtk3-module libwebkit2gtk-4.0-37 libcanberra-gtk3-module
+    wget https://jp-minerals.org/vesta/archives/testing/VESTA-gtk3-x86_64.tar.bz2
+    mkdir -p /usr/local/vesta
+    tar -xjf VESTA-gtk3-x86_64.tar.bz2 -C /usr/local/vesta --strip=1
+    chmod -R 775 /usr/local/vesta
+    rm -f VESTA-gtk3-x86_64.tar.bz2
+    apt autoclean
+    apt autoremove --purge -y
+    rm -rf /var/lib/apt/lists/*
+
+%help
+    Container with pre-built XCrysDen for Ubuntu 24.04
+
+%environment
+    export PATH=$PATH:/usr/local/vesta
+
+
+%runscript
+    exec VESTA "$@"

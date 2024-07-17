@@ -1,0 +1,26 @@
+BootStrap: docker
+From: ubuntu:24.04
+
+%post
+    apt update
+    apt upgrade -y
+    DEBIAN_FRONTEND=noninteractive apt install -y \
+	    wget tk libglu1-mesa libtogl2 libfftw3-dev \
+      libxmu-dev imagemagick openbabel libgfortran-13-dev
+    wget http://www.xcrysden.org/download/xcrysden-1.6.2-linux_x86_64-shared.tar.gz
+    mkdir -p /usr/local/xcrysden/1.6.2
+    tar xf xcrysden-1.6.2-linux_x86_64-shared.tar.gz -C /usr/local/xcrysden/1.6.2 --strip=1
+    rm -f xcrysden-1.6.2-linux_x86_64-shared.tar.gz
+    apt autoclean
+    apt autoremove --purge -y
+    rm -rf /var/lib/apt/lists/*
+
+%help
+    Container with pre-built XCrysDen for Ubuntu 24.04
+
+%environment
+    export PATH=$PATH:/usr/local/xcrysden/1.6.2
+
+
+%runscript
+    exec xcrysden "$@"
