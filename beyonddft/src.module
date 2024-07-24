@@ -2,11 +2,11 @@
 # Modul triqs unstable compiled with intel oneAPI
 #
 
-set     name        triqs 
-set     version     beyondDFT_nix2.2_gnu
-set     root        REPLACEDIR 
+set     name        triqs
+set     version     beyondDFT_nix2.3_gnu
+set     root        REPLACEDIR
 
-set     description "beyondDFT package" 
+set     description "beyondDFT package"
 
 module-whatis   "$description"
 
@@ -20,7 +20,7 @@ proc ModulesHelp { } {
 module          load    MODULES
 
 setenv CC       gcc
-setenv CXX      g++ 
+setenv CXX      g++
 setenv CXXFLAGS "-Wno-register -march=broadwell"
 setenv FC       gfortran
 setenv BLA_VENDOR Intel10_64_dyn
@@ -39,6 +39,6 @@ prepend-path    LIBRARY_PATH        $root/lib
 prepend-path    LIBRARY_PATH        $root/lib64
 prepend-path    LD_LIBRARY_PATH     $root/lib
 prepend-path    LD_LIBRARY_PATH     $root/lib64
-prepend-path    PYTHONPATH          $root/lib/python3.10/site-packages
+prepend-path    PYTHONPATH          $root/lib/python3.11/site-packages
 
 

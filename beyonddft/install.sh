@@ -3,7 +3,7 @@
 # installation script for triqs3 stable branch with clang OpenMPI toolchain with new spack modules
 
 # load modules
-MODULES="modules/2.2-20230808 gcc/11.4.0 flexiblas openmpi cmake gmp fftw nfft hdf5/mpi boost/libcpp-1.82.0 intel-oneapi-mkl"
+MODULES="modules/2.3-20240529 gcc/13.2.0 flexiblas openmpi cmake gmp fftw nfft hdf5/mpi intel-oneapi-mkl boost/libcpp-1.84.0"
 module purge
 module load ${MODULES}
 
@@ -22,7 +22,7 @@ export MKL_NUM_THREADS=1
 export OMP_NUM_THREADS=12
 NCORES=12
 
-BUILDINFO=nix2.2_gnu
+BUILDINFO=nix2.3_gnu
 BUILDDIR=/tmp/beyondDFT_${BUILDINFO}_build
 INSTALLDIR=$(pwd)/installation
 MODULEDIR=$(git rev-parse --show-toplevel)/modules
@@ -35,7 +35,7 @@ export PATH=${INSTALLDIR}/bin:$PATH
 export CPLUS_INCLUDE_PATH=${INSTALLDIR}/include:$CPLUS_INCLUDE_PATH
 export LIBRARY_PATH=${INSTALLDIR}/lib:${INSTALLDIR}/lib64:$LIBRARY_PATH
 export LD_LIBRARY_PATH=${INSTALLDIR}/lib:${INSTALLDIR}/lib64:$LD_LIBRARY_PATH
-export PYTHONPATH=${INSTALLDIR}/lib/python3.10/site-packages:$PYTHONPATH
+export PYTHONPATH=${INSTALLDIR}/lib/python3.11/site-packages:$PYTHONPATH
 
 log=build_$(date +%Y%m%d%H%M).log
 testlog="$(pwd)/${log/.log/_test.log}"
@@ -45,9 +45,9 @@ testlog="$(pwd)/${log/.log/_test.log}"
     module list
 
     # install SLATE
-    SLVER=slate-2023.08.25
+    SLVER=slate-2024.05.31
     cd ${BUILDDIR}
-    wget https://github.com/icl-utk-edu/slate/releases/download/v2023.08.25/${SLVER}.tar.gz
+    wget https://github.com/icl-utk-edu/slate/releases/download/v2024.05.31/${SLVER}.tar.gz
     tar -xf ${SLVER}.tar.gz
     cd ${SLVER}
     mkdir -p build && cd build
@@ -60,12 +60,12 @@ testlog="$(pwd)/${log/.log/_test.log}"
     # fetch latest changes
     cd tblis && git pull
     ./configure --prefix=${INSTALLDIR}
-    make -j$NCORES 
+    make -j$NCORES
     make install
 
     # install beyondDFT
     cd ${BUILDDIR}
-    git clone -b unfold_bz --depth 1 git@github.com:mmorale3/BeyondDFT.git bdft
+    git clone -b main --depth 1 git@github.com:mmorale3/BeyondDFT.git bdft
     # fetch latest changes
     cd bdft && git pull
     mkdir -p build && cd build
