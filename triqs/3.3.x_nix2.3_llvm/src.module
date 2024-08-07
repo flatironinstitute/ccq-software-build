@@ -2,11 +2,11 @@
 # Modul triqs unstable compiled with intel oneAPI
 #
 
-set     name        triqs 
-set     version     3_stable_nix2_llvm
-set     root        REPLACEDIR 
+set     name        triqs
+set     version     3.3.x_nix2.3_llvm
+set     root        REPLACEDIR
 
-set     description "triqs 3.x stable release including dfttools cthyb etc" 
+set     description "triqs 3.3.x stable release including dfttools cthyb etc"
 
 module-whatis   "$description"
 
@@ -30,6 +30,7 @@ setenv          ITENSOR_ROOT        $root
 setenv          INSTALLDIR          $root
 setenv          TRIQS_VERSION       $version
 setenv          MKL_NUM_THREADS     1
+setenv          NEVANLINNA_NUM_THREADS 8
 setenv          MKL_INTERFACE_LAYER GNU,LP64
 setenv          MKL_THREADING_LAYER SEQUENTIAL
 setenv          UCX_LOG_LEVEL       error
@@ -38,7 +39,9 @@ prepend-path    PATH                $root/bin
 prepend-path    CPLUS_INCLUDE_PATH  $root/include
 prepend-path    LIBRARY_PATH        $root/lib
 prepend-path    LD_LIBRARY_PATH     $root/lib
-prepend-path    PYTHONPATH          $root/lib/python3.10/site-packages
+prepend-path    LIBRARY_PATH        $root/lib64
+prepend-path    LD_LIBRARY_PATH     $root/lib64
+prepend-path    PYTHONPATH          $root/lib/python3.11/site-packages
 prepend-path    CMAKE_PREFIX_PATH   $root/lib/cmake/triqs
 prepend-path    CMAKE_PREFIX_PATH   $root/lib/cmake/cpp2py
 

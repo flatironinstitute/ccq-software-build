@@ -3,7 +3,7 @@
 # installation script for triqs3 stable branch with clang OpenMPI toolchain with new spack modules
 
 # load modules
-MODULES="modules/2.3-20240529 gcc flexiblas openmpi cmake gmp fftw nfft hdf5/mpi boost/libcpp-1.84.0 python/3.11 python-mpi/3.11 intel-oneapi-mkl llvm/16 eigen mpfr"
+MODULES="modules/2.3-20240529 gcc flexiblas openmpi cmake gmp fftw nfft hdf5/mpi-1.10.11 boost/libcpp-1.84.0 python/3.11 python-mpi/3.11 intel-oneapi-mkl llvm/16 eigen mpfr"
 module purge
 module load ${MODULES}
 
@@ -32,7 +32,7 @@ mkdir -p $BUILDDIR
 mkdir -p $INSTALLDIR/lib/python3.11/site-packages
 
 # in case you are using a python virtual environment set it now here
-#source /mnt/home/ahampel/py_venv/311/bin/activate
+source /mnt/home/ahampel/py_venv/311/bin/activate
 # to have cmake pick up the virtual environment, unset PYTHON_ROOT
 # see cmake --help-policy CMP0144
 unset PYTHON_ROOT
@@ -56,7 +56,7 @@ testlog="$(pwd)/${log/.log/_test.log}"
 
     # install triqs
     cd ${BUILDDIR}
-    git clone -b unstable --depth 1 https://github.com/TRIQS/triqs triqs.src
+    git clone -b DEV_SERIALIZATION --depth 1 https://github.com/TRIQS/triqs triqs.src
     # fetch latest changes
     cd triqs.src && git pull && cd ..
     rm -rf triqs.build && mkdir -p triqs.build && cd triqs.build
