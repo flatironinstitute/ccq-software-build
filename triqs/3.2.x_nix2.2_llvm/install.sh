@@ -3,7 +3,7 @@
 # installation script for triqs3 stable branch with clang OpenMPI toolchain with new spack modules
 
 # load modules
-MODULES="modules/2.2-20230808 gcc flexiblas openmpi cmake gmp fftw nfft hdf5/mpi boost/libcpp-1.82.0 python/3.10 python-mpi/3.10 intel-oneapi-mkl llvm/16 eigen mpfr"
+MODULES="modules/2.2-20230808 gcc flexiblas openmpi cmake gmp fftw nfft hdf5/mpi-1.10.9 boost/libcpp-1.82.0 python/3.10 python-mpi/3.10 intel-oneapi-mkl llvm/16 eigen mpfr"
 module purge
 module load ${MODULES}
 

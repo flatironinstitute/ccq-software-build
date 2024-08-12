@@ -1,12 +1,12 @@
 #
-# Modul triqs unstable compiled with intel oneAPI
+# Modul triqs unstable compiled with intel oneAPI debug
 #
 
-set     name        triqs 
-set     version     3_unst_nix2.1_llvm
-set     root        REPLACEDIR 
+set     name        triqs
+set     version     3_unst_nix2_llvm_san
+set     root        REPLACEDIR
 
-set     description "triqs unstable including dfttools cthyb etc" 
+set     description "triqs 3.x unstable release including dfttools cthyb etc"
 
 module-whatis   "$description"
 
@@ -34,13 +34,20 @@ setenv          MKL_INTERFACE_LAYER GNU,LP64
 setenv          MKL_THREADING_LAYER SEQUENTIAL
 setenv          UCX_LOG_LEVEL       error
 
+setenv          ASAN_SYMBOLIZER_PATH     REPLACELLVMDIR
+setenv          ASAN_OPTIONS             symbolize=1:detect_leaks=0 # fast_unwind_on_malloc=0
+setenv          UBSAN_SYMBOLIZER_PATH    REPLACELLVMDIR
+setenv          UBSAN_OPTIONS            symbolize=1:print_stacktrace=1:halt_on_error=1
+setenv          TSAN_SYMBOLIZER_PATH     REPLACELLVMDIR
+setenv          TSAN_OPTIONS             symbolize=1:halt_on_error=1
+setenv          MSAN_SYMBOLIZER_PATH     REPLACELLVMDIR
+setenv          MSAN_OPTIONS             symbolize=1:halt_on_error=1
+
 prepend-path    PATH                $root/bin
 prepend-path    CPLUS_INCLUDE_PATH  $root/include
 prepend-path    LIBRARY_PATH        $root/lib
-prepend-path    LIBRARY_PATH        $root/lib64
 prepend-path    LD_LIBRARY_PATH     $root/lib
-prepend-path    LD_LIBRARY_PATH     $root/lib64
-prepend-path    PYTHONPATH          $root/lib/python3.10/site-packages
+prepend-path    PYTHONPATH          $root/lib/python3.11/site-packages
 prepend-path    CMAKE_PREFIX_PATH   $root/lib/cmake/triqs
 prepend-path    CMAKE_PREFIX_PATH   $root/lib/cmake/cpp2py
 

@@ -3,7 +3,7 @@
 # installation script for triqs3 stable branch with clang OpenMPI toolchain with new spack modules
 
 # load modules
-MODULES="modules/2.1.1-20230405 gcc/11.3.0 flexiblas openmpi cmake gmp fftw nfft hdf5/mpi boost/libcpp-1.80.0 python/3.10 python-mpi/3.10 intel-oneapi-mkl llvm/15 eigen mpfr"
+MODULES="modules/2.3-20240529 gcc flexiblas openmpi cmake gmp fftw nfft hdf5/mpi-1.10.11 boost/libcpp-1.84.0 python/3.11 python-mpi/3.11 intel-oneapi-mkl llvm/16 eigen mpfr gperftools/2.15"
 module purge
 module load ${MODULES}
 
@@ -12,6 +12,7 @@ export CXX=clang++
 export CFLAGS="-march=broadwell"
 export CXXFLAGS="-stdlib=libc++ -Wno-register -march=broadwell"
 export FC=gfortran
+export CTEST_OUTPUT_ON_FAILURE=1
 
 export BLA_VENDOR=FlexiBLAS
 
@@ -20,22 +21,23 @@ export MKL_INTERFACE_LAYER=GNU,LP64
 export MKL_THREADING_LAYER=SEQUENTIAL
 export MKL_NUM_THREADS=1
 export OMP_NUM_THREADS=12
-NCORES=12
+export NEVANLINNA_NUM_THREADS=4
+NCORES=20
 
-BUILDINFO=3_unst_nix2.1_llvm
+BUILDINFO=3_unst_nix2.3_llvm_prof
 BUILDDIR=/tmp/triqs${BUILDINFO}_build
 INSTALLDIR=$(pwd)/installation
 MODULEDIR=$(git rev-parse --show-toplevel)/modules
 mkdir -p $BUILDDIR
-mkdir -p $INSTALLDIR/lib/python3.10/site-packages
+mkdir -p $INSTALLDIR/lib/python3.11/site-packages
 
 export ITENSOR_ROOT=${INSTALLDIR}
 export TRIQS_ROOT=${INSTALLDIR}
 export PATH=${INSTALLDIR}/bin:$PATH
 export CPLUS_INCLUDE_PATH=${INSTALLDIR}/include:$CPLUS_INCLUDE_PATH
-export LIBRARY_PATH=${INSTALLDIR}/lib:$LIBRARY_PATH
-export LD_LIBRARY_PATH=${INSTALLDIR}/lib:$LD_LIBRARY_PATH
-export PYTHONPATH=${INSTALLDIR}/lib/python3.10/site-packages:$PYTHONPATH
+export LIBRARY_PATH=${INSTALLDIR}/lib:${INSTALLDIR}/lib64:$LIBRARY_PATH
+export LD_LIBRARY_PATH=${INSTALLDIR}/lib:${INSTALLDIR}/lib64:$LD_LIBRARY_PATH
+export PYTHONPATH=${INSTALLDIR}/lib/python3.11/site-packages:$PYTHONPATH
 export CMAKE_PREFIX_PATH=${INSTALLDIR}/lib/cmake/triqs:$CMAKE_PREFIX_PATH
 export CMAKE_PREFIX_PATH=${INSTALLDIR}/lib/cmake/cpp2py:$CMAKE_PREFIX_PATH
 
@@ -51,9 +53,9 @@ testlog="$(pwd)/${log/.log/_test.log}"
     git clone -b unstable --depth 1 https://github.com/TRIQS/triqs triqs.src
     # fetch latest changes
     cd triqs.src && git pull && cd ..
-    mkdir -p triqs.build && cd triqs.build
+    rm -rf triqs.build && mkdir -p triqs.build && cd triqs.build
 
-    cmake ../triqs.src -DCMAKE_INSTALL_PREFIX=${INSTALLDIR} -DBuild_Deps=Always
+    cmake ../triqs.src -DCMAKE_INSTALL_PREFIX=${INSTALLDIR} -DBuild_Deps=Always -DCMAKE_BUILD_TYPE=RelWithDebInfo
     # make / test / install
     make -j$NCORES
     ctest -j$NCORES &>> ${testlog}
@@ -65,9 +67,9 @@ testlog="$(pwd)/${log/.log/_test.log}"
     git clone -b unstable --depth 1 https://github.com/TRIQS/cthyb cthyb.src
     # fetch latest changes
     cd cthyb.src && git pull && cd ..
-    mkdir -p cthyb.build && cd cthyb.build
+    rm -rf cthyb.build && mkdir -p cthyb.build && cd cthyb.build
 
-    cmake ../cthyb.src
+    cmake ../cthyb.src -DCMAKE_BUILD_TYPE=RelWithDebInfo
     # make / test / install
     make -j$NCORES
     ctest -j$NCORES &>> ${testlog}
@@ -79,7 +81,7 @@ testlog="$(pwd)/${log/.log/_test.log}"
     git clone -b unstable --depth 1 git@github.com:TRIQS/ctint.git ctint.src
     # fetch latest changes
     cd ctint.src && git pull && cd ..
-    mkdir -p ctint.build && cd ctint.build
+    rm -rf ctint.build && mkdir -p ctint.build && cd ctint.build
 
     cmake ../ctint.src
     # make / test / install
@@ -94,7 +96,7 @@ testlog="$(pwd)/${log/.log/_test.log}"
     git clone -b unstable --depth 1 git@github.com:TRIQS/ctseg.git ctseg.src
     # fetch latest changes
     cd ctseg.src && git pull && cd ..
-    mkdir -p ctseg.build && cd ctseg.build
+    rm -rf ctseg.build && mkdir -p ctseg.build && cd ctseg.build
 
     cmake ../ctseg.src
     # make / test / install
@@ -103,14 +105,29 @@ testlog="$(pwd)/${log/.log/_test.log}"
     make install
 
     #################
+
     cd ${BUILDDIR}
-    # install dfttools
+    # install w2dynamics interface
+    git clone -b unstable --depth 1 git@github.com:TRIQS/w2dynamics_interface.git w2dyn.src
+    # fetch latest changes
+    cd w2dyn.src && git pull && cd ..
+    rm -rf w2dyn.build && mkdir -p w2dyn.build && cd w2dyn.build
+
+    cmake ../w2dyn.src
+    # make / test / install
+    make -j$NCORES
+    ctest -j$NCORES &>> ${testlog}
+    make install
+
+    #################
+    cd ${BUILDDIR}
+    install dfttools
     git clone -b unstable --depth 1 https://github.com/TRIQS/dft_tools.git dft_tools.src
     # fetch latest changes
     cd dft_tools.src && git pull && cd ..
-    mkdir -p dft_tools.build && cd dft_tools.build
+    rm -rf dft_tools.build && mkdir -p dft_tools.build && cd dft_tools.build
 
-    cmake ../dft_tools.src
+    cmake ../dft_tools.src -DCMAKE_BUILD_TYPE=RelWithDebInfo
     # make / test / install
     make -j$NCORES
     ctest -j$NCORES &>> ${testlog}
@@ -122,7 +139,7 @@ testlog="$(pwd)/${log/.log/_test.log}"
     git clone -b unstable --depth 1 https://github.com/TRIQS/maxent.git maxent.src
     # fetch latest changes
     cd maxent.src && git pull && cd ..
-    mkdir -p maxent.build && cd maxent.build
+    rm -rf maxent.build && mkdir -p maxent.build && cd maxent.build
 
     cmake ../maxent.src
     # make / test / install
@@ -132,25 +149,39 @@ testlog="$(pwd)/${log/.log/_test.log}"
     ################
 
     cd ${BUILDDIR}
-    # install TPRF
-    git clone -b unstable --depth 1 https://github.com/TRIQS/tprf.git tprf.src
+    # install Nevanlinna
+    git clone -b unstable --depth 1 https://github.com/TRIQS/Nevanlinna.git Nevanlinna.src
     # fetch latest changes
-    cd tprf.src && git pull && cd ..
-    mkdir -p tprf.build && cd tprf.build
+    cd Nevanlinna.src && git pull && cd ..
+    rm -rf Nevanlinna.build && mkdir -p Nevanlinna.build && cd Nevanlinna.build
 
-    cmake ../tprf.src
+    cmake ../Nevanlinna.src
     # make / test / install
     make -j$NCORES
     ctest -j$NCORES &>> ${testlog}
     make install
+
     ################
+    cd ${BUILDDIR}
+    # install TPRF
+    git clone -b unstable --depth 1 https://github.com/TRIQS/tprf.git tprf.src
+    # fetch latest changes
+    cd tprf.src && git pull && cd ..
+    rm -rf tprf.build && mkdir -p tprf.build && cd tprf.build
+
+    cmake ../tprf.src -DCMAKE_BUILD_TYPE=RelWithDebInfo
+    # make / test / install
+    make -j$NCORES
+    ctest -j$NCORES &>> ${testlog}
+    make install
+    ###############
 
     cd ${BUILDDIR}
     # install hubbardI
     git clone -b unstable --depth 1 https://github.com/TRIQS/hubbardI.git hubbardI.src
     # fetch latest changes
     cd hubbardI.src && git pull && cd ..
-    mkdir -p hubbardI.build && cd hubbardI.build
+    rm -rf hubbardI.build && mkdir -p hubbardI.build && cd hubbardI.build
 
     cmake ../hubbardI.src
     # make / test / install
@@ -159,12 +190,12 @@ testlog="$(pwd)/${log/.log/_test.log}"
     make install
     ################
 
-    cd ${BUILDDIR}
+    cd ${BUILDDIRV}
     # install Hartree Fock
     git clone -b unstable --depth 1 https://github.com/triqs/hartree_fock.git hartree_fock.src
     # fetch latest changes
     cd hartree_fock.src && git pull && cd ..
-    mkdir -p hartree_fock.build && cd hartree_fock.build
+    rm -rf hartree_fock.build && mkdir -p hartree_fock.build && cd hartree_fock.build
 
     cmake ../hartree_fock.src
     # make / test / install
@@ -178,7 +209,7 @@ testlog="$(pwd)/${log/.log/_test.log}"
     git clone -b unstable --depth 1 https://github.com/flatironinstitute/solid_dmft.git solid_dmft.src
     # fetch latest changes
     cd solid_dmft.src && git pull && cd ..
-    mkdir -p solid_dmft.build && cd solid_dmft.build
+    rm -rf solid_dmft.build && mkdir -p solid_dmft.build && cd solid_dmft.build
 
     cmake ../solid_dmft.src
     # make / test / install
@@ -186,30 +217,6 @@ testlog="$(pwd)/${log/.log/_test.log}"
     # tests leverage MPI:
     make test &>> ${testlog}
     make install
-    ################
-    
-    cd ${BUILDDIR}
-    # install Nevanlinna
-    git clone -b unstable --depth 1 git@github.com:TRIQS/Nevanlinna.git nevanlinna.src
-    # fetch latest changes
-    cd nevanlinna.src && git pull && cd ..
-    mkdir -p nevanlinna.build && cd nevanlinna.build
-
-    cmake ../nevanlinna.src
-    # make / test / install
-    make
-    make test &>> ${testlog}
-    make install
-    ################
-
-    # install itensor
-    git clone -b v3 --depth 1 https://github.com/ITensor/ITensor.git itensor
-    # fetch latest changes
-    cd itensor && git pull && make clean
-    cp ${INSTALLDIR}/../options.mk.itensor ./options.mk
-    make -j$NCORES
-    # copying Itensor libs to triqs lib dir
-    cp -r lib itensor ${TRIQS_ROOT}/
     ################
 
     # install ForkTPS
@@ -219,13 +226,13 @@ testlog="$(pwd)/${log/.log/_test.log}"
     cd forktps.src && git pull && cd ..
     mkdir -p forktps.build && cd forktps.build
 
-    cmake ../forktps.src -DBUILD_SHARED_LIBS=ON
+    cmake ../forktps.src -DBUILD_SHARED_LIBS=ON -DBLAS_LIBRARIES="-L${FLEXIBLAS_ROOT}/libi64 -lflexiblas -lpthread" -Dgpu_backend=none
     # make / test / install
     make -j$NCORES
     # tests leverage MPI / OpenMP
     make test &>> ${testlog}
     make install
-    ################
+    ###############
 ) &> ${log}
 
 mkdir -p $MODULEDIR/triqs

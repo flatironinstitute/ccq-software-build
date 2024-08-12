@@ -48,6 +48,7 @@ export CMAKE_PREFIX_PATH=${INSTALLDIR}/lib/cmake/triqs:$CMAKE_PREFIX_PATH
 export CMAKE_PREFIX_PATH=${INSTALLDIR}/lib/cmake/cpp2py:$CMAKE_PREFIX_PATH
 
 log=build_$(date +%Y%m%d%H%M).log
+errlog=build_$(date +%Y%m%d%H%M).err
 testlog="$(pwd)/${log/.log/_test.log}"
 (
     cd ${BUILDDIR}
@@ -119,6 +120,7 @@ testlog="$(pwd)/${log/.log/_test.log}"
     cd w2dyn.src && git pull && cd ..
     rm -rf w2dyn.build && mkdir -p w2dyn.build && cd w2dyn.build
 
+    pip install configobj
     cmake ../w2dyn.src
     # make / test / install
     make -j$NCORES
@@ -239,7 +241,7 @@ testlog="$(pwd)/${log/.log/_test.log}"
     make test &>> ${testlog}
     make install
     ################
-) &> ${log}
+) 1> ${log} 2> ${errlog}
 
 mkdir -p $MODULEDIR/triqs
 # make the template a proper module
