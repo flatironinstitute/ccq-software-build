@@ -12,12 +12,11 @@
 >        IF (NUM_WANN == 0) NUM_WANN = P_MLWF%NUM_WANN
 >    ENDIF
 > 
-563c574
+566c577
 <       CALL LPRJ_WRITE(MLWF%LPRJ_functions,MLWF%LPRJ_COVL,IO%IU6,IO%IU0,W)
 ---
 >       CALL LPRJ_WRITE(MLWF%LPRJ_functions,MLWF%LPRJ_COVL,IO%IU6,IO%IU0,W, FERMILEVEL)
-576,579d586
-<    ! or the one-shot method
-<    ! or unitary matrix contrained optimization (umco)
+581c592
 <    ELSE
-<       CALL MLWF_TRAFO_RUN(P_MLWF,W,P,CQIJ,LATT_CUR,T_INFO,INFO,IO)
+---
+>    ELSE IF (MOD(INFO%ICHARG,10)/=5) THEN

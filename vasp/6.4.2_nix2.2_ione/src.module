@@ -3,10 +3,10 @@
 #
 
 set     name        vasp
-set     version     6.3.2_nix2_gnu_ompi
+set     version     6.4.1_nix2.1_ione
 set     root        REPLACEDIR
 
-set     description "Vasp 6.3.2 + wannier90 vers3.1 compiled with gnu and openmpi"
+set     description "Vasp 6.4.1 + wannier90 dev compiled with intel one api compilers"
 
 module-whatis   "$description"
 

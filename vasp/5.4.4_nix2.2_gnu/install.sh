@@ -3,14 +3,12 @@
 # installation script for Vasp +  wannier90 using GNU OpenMPI toolchain
 
 # load modules
-MODULES="modules/2.0-20220630 gcc/11 openmpi/4 fftw intel-oneapi-mkl git wannier90/3.1_nix2_gnu_ompi"
+MODULES="modules/2.2-20230808 gcc/11.4.0 openmpi/4 fftw intel-oneapi-mkl git wannier90/dev_nix2.2_gnu_ompi"
 module purge
 module load ${MODULES}
 
-BUILDDIR=/tmp/vasp_${BUILDINFO}_build
-
 MODULEDIR=$(git rev-parse --show-toplevel)/modules
-BUILDINFO=5.4.4_nix2_gnu
+BUILDINFO=5.4.4_nix2.2_gnu
 BUILDDIR=/tmp/vasp_${BUILDINFO}_build
 mkdir -p ${BUILDDIR}
 INSTALLDIR="$(pwd)"
@@ -27,7 +25,7 @@ log=build_$(date +%Y%m%d%H%M).log
 
 (
     cd ${BUILDDIR}
-    
+
     # list modules
     module list
 
@@ -36,9 +34,9 @@ log=build_$(date +%Y%m%d%H%M).log
 
     # copy makefile and include wannier lib
     cp ${INSTALLDIR}/makefile.include ${BUILDDIR}/
-    
+
     cp ${WANNIER90_ROOT}/lib/libwannier_seq.a ${BUILDDIR}/
-    
+
     mkdir ${BUILDDIR}/build
     mkdir ${BUILDDIR}/bin
     # build vasp std gamma version and non-collinear
@@ -46,12 +44,12 @@ log=build_$(date +%Y%m%d%H%M).log
 
     # copy binaries
     mkdir -p ${INSTALLDIR}/bin
-    cp bin/* ${INSTALLDIR}/bin 
+    cp bin/* ${INSTALLDIR}/bin
 
 ) &> ${log}
-    
+
 mkdir -p $MODULEDIR/vasp
-# make the template a proper module 
+# make the template a proper module
 echo '#%Module' > $MODULEDIR/vasp/$BUILDINFO
 # update module template
 sed "s|REPLACEDIR|${INSTALLDIR}|g;s|MODULES|${MODULES}|g" < src.module >> $MODULEDIR/vasp/$BUILDINFO

@@ -4,20 +4,20 @@
 # use release 3.1.0 of wannier90 / dev wannier90 branch (that allows MPI) messes up ordering of wannier functions! 
 #
 # load modules
-MODULES="modules/2.0-20220630 gcc/11 openmpi/4 fftw intel-oneapi-mkl hdf5/mpi git wannier90/3.1_nix2_gnu_ompi"
+MODULES="modules/2.1.1-20230405 intel-oneapi-compilers intel-oneapi-mkl intel-oneapi-mpi hdf5/mpi git"
 module purge
 module load ${MODULES}
 
 BUILDDIR=/tmp/vasp_${BUILDINFO}_build
 
 MODULEDIR=$(git rev-parse --show-toplevel)/modules
-BUILDINFO=6.4.0_nix2_gnu
+BUILDINFO=6.4.1_nix2.1_ione
 BUILDDIR=/tmp/vasp_${BUILDINFO}_build
 mkdir -p ${BUILDDIR}
 INSTALLDIR="$(pwd)"
 MODULEDIR=$(git rev-parse --show-toplevel)/modules
 
-VASPFILE="vasp.6.4.0"
+VASPFILE="vasp.6.4.1"
 
 export MKL_NUM_THREADS=1
 export OMP_NUM_THREADS=1
@@ -34,6 +34,14 @@ testlog="$(pwd)/${log/.log/_test.log}"
     # list modules
     module list
 
+    # install wannier90 lib
+    git clone -b v3.1.0 https://github.com/wannier-developers/wannier90.git wannier90
+    cd wannier90
+    cp ${INSTALLDIR}/make.inc make.inc
+    make lib
+    cp libwannier.a ${INSTALLDIR}/bin/
+    cd ${BUILDDIR}
+
     # unpack vasp_src
     tar -xf ${INSTALLDIR}/${VASPFILE}.tgz
     cd ${VASPFILE}
@@ -41,13 +49,8 @@ testlog="$(pwd)/${log/.log/_test.log}"
     # copy makefile and include wannier lib
     cp ${INSTALLDIR}/makefile.include ${BUILDDIR}/${VASPFILE}
     
-    cp ${WANNIER90_ROOT}/lib/libwannier.a ${BUILDDIR}/${VASPFILE}
+    cp ${INSTALLDIR}/bin/libwannier.a ${BUILDDIR}/${VASPFILE}/libwannier.a
      
-    # patch for Vasp CSC
-    cd src
-    rsync -av ${INSTALLDIR}/vasp_csc_patch ${BUILDDIR}/${VASPFILE}
-    for name in electron.F fileio.F locproj.F mlwf.F; do patch $name -p1 -i ../vasp_csc_patch/$name.diff; done
-    cd ${BUILDDIR}/${VASPFILE}
 
     # build vasp std gamma version and non-collinear
     make DEPS=1 -j$NCORES std gam ncl
