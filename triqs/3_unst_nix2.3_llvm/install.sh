@@ -32,7 +32,7 @@ mkdir -p $BUILDDIR
 mkdir -p $INSTALLDIR/lib/python3.11/site-packages
 
 # in case you are using a python virtual environment set it now here
-source /mnt/home/ahampel/py_venv/311/bin/activate
+# source /mnt/home/ahampel/py_venv/311/bin/activate
 # to have cmake pick up the virtual environment, unset PYTHON_ROOT
 # see cmake --help-policy CMP0144
 unset PYTHON_ROOT
@@ -56,7 +56,7 @@ testlog="$(pwd)/${log/.log/_test.log}"
 
     # install triqs
     cd ${BUILDDIR}
-    git clone -b DEV_SERIALIZATION --depth 1 https://github.com/TRIQS/triqs triqs.src
+    git clone -b unstable --depth 1 https://github.com/TRIQS/triqs triqs.src
     # fetch latest changes
     cd triqs.src && git pull && cd ..
     rm -rf triqs.build && mkdir -p triqs.build && cd triqs.build
