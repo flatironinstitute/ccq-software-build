@@ -1,0 +1,26 @@
+#
+# Module: octopus with openmpi
+#
+
+set name octopus
+set version 16.2_nix2_gnu
+set     root        REPLACEDIR
+
+set     description "octopus ver 16.2 compiled with MODULES"
+
+module-whatis   "$description"
+
+proc ModulesHelp { } {
+    global description url version git_hash
+    puts stderr "Description: $description"
+    puts stderr "Version:     $version"
+}
+
+conflict $name intel/mpi intel/compiler
+
+module          load    MODULES
+prepend-path    PATH                            $root/bin
+prepend-path    LD_LIBRARY_PATH                 $root/lib
+
+setenv          OCTOPUS_BASE                       $root
+setenv          OCTOPUS_VERSION                    $version
