@@ -62,7 +62,7 @@ testlog="$(pwd)/${log/.log/_test.log}"
     cd triqs.src && git pull && cd ..
     rm -rf triqs.build && mkdir -p triqs.build && cd triqs.build
 
-    cmake ../triqs.src -DCMAKE_INSTALL_PREFIX=${INSTALLDIR} -DBuild_Deps=Always
+    cmake ../triqs.src -DCMAKE_INSTALL_PREFIX=${INSTALLDIR}
     # make / test / install
     make -j$NCORES
     ctest -j$NCORES &>> ${testlog}
@@ -85,7 +85,7 @@ testlog="$(pwd)/${log/.log/_test.log}"
 
     cd ${BUILDDIR}
     # install ctint
-    git clone -b unstable --depth 1 git@github.com:TRIQS/ctint.git ctint.src
+    git clone -b 3.3.x --depth 1 git@github.com:TRIQS/ctint.git ctint.src
     # fetch latest changes
     cd ctint.src && git pull && cd ..
     rm -rf ctint.build && mkdir -p ctint.build && cd ctint.build
@@ -100,7 +100,7 @@ testlog="$(pwd)/${log/.log/_test.log}"
 
     cd ${BUILDDIR}
     # install ctseg
-    git clone -b unstable --depth 1 git@github.com:TRIQS/ctseg.git ctseg.src
+    git clone -b 3.3.x --depth 1 git@github.com:TRIQS/ctseg.git ctseg.src
     # fetch latest changes
     cd ctseg.src && git pull && cd ..
     rm -rf ctseg.build && mkdir -p ctseg.build && cd ctseg.build
@@ -212,20 +212,20 @@ testlog="$(pwd)/${log/.log/_test.log}"
     make install
     ################
 
-    # install ForkTPS
-    cd ${BUILDDIR}
-    git clone -b unstable --depth 1 git@github.com:TRIQS/forktps.git forktps.src
-    # fetch latest changes
-    cd forktps.src && git pull && cd ..
-    mkdir -p forktps.build && cd forktps.build
-
-    cmake ../forktps.src -DBUILD_SHARED_LIBS=ON -DBLAS_LIBRARIES="-L${FLEXIBLAS_ROOT}/libi64 -lflexiblas -lpthread" -Dgpu_backend=none
-    # make / test / install
-    make -j$NCORES
-    # tests leverage MPI / OpenMP
-    make test &>> ${testlog}
-    make install
-    ################
+    # # install ForkTPS
+    # cd ${BUILDDIR}
+    # git clone -b unstable --depth 1 git@github.com:TRIQS/forktps.git forktps.src
+    # # fetch latest changes
+    # cd forktps.src && git pull && cd ..
+    # mkdir -p forktps.build && cd forktps.build
+    #
+    # cmake ../forktps.src -DBUILD_SHARED_LIBS=ON -DBLAS_LIBRARIES="-L${FLEXIBLAS_ROOT}/libi64 -lflexiblas -lpthread" -Dgpu_backend=none
+    # # make / test / install
+    # make -j$NCORES
+    # # tests leverage MPI / OpenMP
+    # make test &>> ${testlog}
+    # make install
+    # ################
 
     cd ${BUILDDIR}
     # install solid_dmft
