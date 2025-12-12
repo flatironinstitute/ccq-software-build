@@ -145,13 +145,6 @@ exec 3>&1
     ctest --test-dir solid_dmft.build -j4 &>> ${testlog}
     cmake --install solid_dmft.build
 
-    echo "[$(date +%H:%M:%S)] Building modest..." >&3
-    git clone -b unstable --depth 1 https://github.com/TRIQS/modest.git modest.src
-    cmake -S modest.src -B modest.build
-    cmake --build modest.build -j$NCORES
-    ctest --test-dir modest.build -j$NCORES &>> ${testlog}
-    cmake --install modest.build
-
     echo "[$(date +%H:%M:%S)] Build complete." >&3
 ) &> ${log}
 exec 3>&-

@@ -73,13 +73,6 @@ exec 3>&1
     ctest --test-dir dft_tools.build -j$NCORES
     cmake --install dft_tools.build
 
-    echo "[$(date +%H:%M:%S)] Building modest..." >&3
-    git clone -b unstable --depth 1 https://github.com/TRIQS/modest.git modest.src
-    cmake -S modest.src -B modest.build -DCMAKE_BUILD_TYPE=RelWithDebInfo -DASAN=ON -DUBSAN=ON
-    cmake --build modest.build -j$NCORES
-    ctest --test-dir modest.build -j$NCORES
-    cmake --install modest.build
-
     echo "[$(date +%H:%M:%S)] Build complete." >&3
 ) &> ${log}
 exec 3>&-
