@@ -1,4 +1,5 @@
 #!/bin/bash
+set -u # error for undefined variables
 
 # installation script for triqs3 unstable branch with profiling support (nix2.4 modules)
 
@@ -28,16 +29,19 @@ MODULEDIR=$(git rev-parse --show-toplevel)/modules
 rm -rf $BUILDDIR
 mkdir -p $BUILDDIR $INSTALLDIR/lib/python3.12/site-packages
 
-# cmake policy CMP0144: unset PYTHON_ROOT for venv compatibility
+# in case you are using a python virtual environment set it now here
+# source /mnt/home/ahampel/py_venv/311/bin/activate
+# to have cmake pick up the virtual environment, unset PYTHON_ROOT
+# see cmake --help-policy CMP0144
 unset PYTHON_ROOT
 
 export TRIQS_ROOT=${INSTALLDIR}
-export PATH=${INSTALLDIR}/bin:$PATH
-export CPLUS_INCLUDE_PATH=${INSTALLDIR}/include:$CPLUS_INCLUDE_PATH
-export LIBRARY_PATH=${INSTALLDIR}/lib:${INSTALLDIR}/lib64:$LIBRARY_PATH
-export LD_LIBRARY_PATH=${INSTALLDIR}/lib:${INSTALLDIR}/lib64:$LD_LIBRARY_PATH
-export PYTHONPATH=${INSTALLDIR}/lib/python3.12/site-packages:$PYTHONPATH
-export CMAKE_PREFIX_PATH=${INSTALLDIR}/lib/cmake/triqs:${INSTALLDIR}/lib/cmake/cpp2py:$CMAKE_PREFIX_PATH
+export PATH=${INSTALLDIR}/bin:${PATH:-}
+export CPLUS_INCLUDE_PATH=${INSTALLDIR}/include:${CPLUS_INCLUDE_PATH:-}
+export LIBRARY_PATH=${INSTALLDIR}/lib:${INSTALLDIR}/lib64:${LIBRARY_PATH:-}
+export LD_LIBRARY_PATH=${INSTALLDIR}/lib:${INSTALLDIR}/lib64:${LD_LIBRARY_PATH:-}
+export PYTHONPATH=${INSTALLDIR}/lib/python3.12/site-packages:${PYTHONPATH:-}
+export CMAKE_PREFIX_PATH=${INSTALLDIR}:${CMAKE_PREFIX_PATH:-}
 
 log=build_$(date +%Y%m%d%H%M).log
 testlog=$(pwd)/${log/.log/_test.log}
@@ -52,7 +56,6 @@ exec 3>&1
     cmake --build clair.build -j$NCORES
     ctest --test-dir clair.build -j$NCORES &>> ${testlog}
     cmake --install clair.build
-    source ${INSTALLDIR}/share/clair/clairvars.sh
 
     echo "[$(date +%H:%M:%S)] Building triqs..." >&3
     git clone -b unstable --depth 1 https://github.com/TRIQS/triqs triqs.src
