@@ -3,7 +3,7 @@ set -u # error for undefined variables
 
 # installation script for triqs3 modest_updates branch with all apps + modest (nix2.4 modules)
 
-MODULES="modules/2.4 gcc flexiblas openmpi cmake gmp fftw nfft hdf5/mpi boost python/3.12 python-mpi/3.12 intel-oneapi-mkl llvm/19 eigen mpfr"
+MODULES="modules/2.4 gcc flexiblas openmpi cmake ccache gmp fftw nfft hdf5/mpi boost python/3.12 python-mpi/3.12 intel-oneapi-mkl llvm/19 eigen mpfr"
 module purge
 module load ${MODULES}
 
@@ -12,6 +12,7 @@ export CFLAGS="-march=broadwell"
 export CXXFLAGS="-stdlib=libc++ -Wno-register -march=broadwell"
 export CTEST_OUTPUT_ON_FAILURE=1
 export BLA_VENDOR=FlexiBLAS
+export CMAKE_CXX_COMPILER_LAUNCHER=ccache CMAKE_C_COMPILER_LAUNCHER=ccache
 
 # MKL/FlexiBLAS setup
 export MKL_INTERFACE_LAYER=GNU,LP64
