@@ -1,7 +1,7 @@
 #!/bin/bash
 set -u # error for undefined variables
 
-# installation script for triqs3 unstable branch with clang OpenMPI toolchain (nix2.4 modules)
+# installation script for triqs3 DEV_ATOM_DIAG_TRUNC branch with all apps + modest + cthyb@DEV_ATOM_DIAG_TRUNC (nix2.4 modules)
 
 MODULES="modules/2.4 gcc flexiblas openmpi cmake ccache gmp fftw nfft hdf5/mpi boost python/3.12 python-mpi/3.12 intel-oneapi-mkl llvm/19 eigen mpfr"
 module purge
@@ -22,7 +22,7 @@ export OMP_NUM_THREADS=12
 export NEVANLINNA_NUM_THREADS=4
 NCORES=20
 
-BUILDINFO=3_unst_nix2.4_llvm
+BUILDINFO=3_cthyb_trunc_nix2.4_llvm
 BUILDDIR=/tmp/triqs${BUILDINFO}_build
 INSTALLDIR=$(pwd)/installation MODULEDIR=$(git rev-parse --show-toplevel)/modules
 
@@ -57,15 +57,15 @@ exec 3>&1
     ctest --test-dir clair.build -j$NCORES &>> ${testlog}
     cmake --install clair.build
 
-    echo "[$(date +%H:%M:%S)] Building triqs..." >&3
-    git clone -b unstable --depth 1 https://github.com/TRIQS/triqs triqs.src
+    echo "[$(date +%H:%M:%S)] Building triqs (DEV_ATOM_DIAG_TRUNC branch)..." >&3
+    git clone -b DEV_ATOM_DIAG_TRUNC --depth 1 https://github.com/TRIQS/triqs triqs.src
     cmake -S triqs.src -B triqs.build -DCMAKE_INSTALL_PREFIX=${INSTALLDIR}
     cmake --build triqs.build -j$NCORES
     ctest --test-dir triqs.build -j$NCORES &>> ${testlog}
     cmake --install triqs.build
 
     echo "[$(date +%H:%M:%S)] Building cthyb..." >&3
-    git clone -b unstable --depth 1 https://github.com/TRIQS/cthyb cthyb.src
+    git clone -b DEV_ATOM_DIAG_TRUNC --depth 1 https://github.com/TRIQS/cthyb cthyb.src
     cmake -S cthyb.src -B cthyb.build
     cmake --build cthyb.build -j$NCORES
     ctest --test-dir cthyb.build -j$NCORES &>> ${testlog}
@@ -147,6 +147,13 @@ exec 3>&1
     cmake --build solid_dmft.build -j$NCORES
     ctest --test-dir solid_dmft.build -j4 &>> ${testlog}
     cmake --install solid_dmft.build
+
+    echo "[$(date +%H:%M:%S)] Building modest..." >&3
+    git clone -b unstable --depth 1 https://github.com/TRIQS/modest.git modest.src
+    cmake -S modest.src -B modest.build
+    cmake --build modest.build -j$NCORES
+    ctest --test-dir modest.build -j$NCORES &>> ${testlog}
+    cmake --install modest.build
 
     echo "[$(date +%H:%M:%S)] Build complete." >&3
 ) &> ${log}
