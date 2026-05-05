@@ -5,6 +5,7 @@ set -u # error for undefined variables
 
 MODULES="devenv9/clang-py3-mkl"
 module purge
+module use /mnt/home/wentzell/opt/modules
 module load ${MODULES}
 
 export CC=clang CXX=clang++ FC=gfortran
