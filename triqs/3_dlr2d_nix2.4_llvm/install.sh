@@ -74,7 +74,7 @@ exec 3>&1
     cmake --install cthyb.build
 
     echo "[$(date +%H:%M:%S)] Building ctint..." >&3
-    git clone -b general_operator_insertion --depth 1 git@github.com:TRIQS/ctint.git ctint.src
+    git clone -b general_operator_insertion --depth 1 https://github.com/TRIQS/ctint.git ctint.src
     cmake -S ctint.src -B ctint.build
     cmake --build ctint.build -j$NCORES
     ctest --test-dir ctint.build -j$NCORES &>> ${testlog}
