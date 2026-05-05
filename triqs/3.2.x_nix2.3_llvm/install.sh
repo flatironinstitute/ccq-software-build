@@ -84,7 +84,7 @@ testlog="$(pwd)/${log/.log/_test.log}"
 
     cd ${BUILDDIR}
     # install ctint
-    git clone -b unstable --depth 1 git@github.com:TRIQS/ctint.git ctint.src
+    git clone -b unstable --depth 1 https://github.com/TRIQS/ctint.git ctint.src
     # fetch latest changes
     cd ctint.src && git pull && cd ..
     rm -rf ctint.build && mkdir -p ctint.build && cd ctint.build
@@ -99,7 +99,7 @@ testlog="$(pwd)/${log/.log/_test.log}"
 
     cd ${BUILDDIR}
     # install ctseg
-    git clone -b unstable --depth 1 git@github.com:TRIQS/ctseg.git ctseg.src
+    git clone -b unstable --depth 1 https://github.com/TRIQS/ctseg.git ctseg.src
     # fetch latest changes
     cd ctseg.src && git pull && cd ..
     rm -rf ctseg.build && mkdir -p ctseg.build && cd ctseg.build
@@ -114,7 +114,7 @@ testlog="$(pwd)/${log/.log/_test.log}"
 
     cd ${BUILDDIR}
     # install w2dynamics interface
-    git clone -b 3.2.x --depth 1 git@github.com:TRIQS/w2dynamics_interface.git w2dyn.src
+    git clone -b 3.2.x --depth 1 https://github.com/TRIQS/w2dynamics_interface.git w2dyn.src
     # fetch latest changes
     cd w2dyn.src && git pull && cd ..
     rm -rf w2dyn.build && mkdir -p w2dyn.build && cd w2dyn.build

@@ -76,7 +76,7 @@ testlog="$(pwd)/${log/.log/_test.log}"
 
     cd ${BUILDDIR}
     # install ctint
-    git clone -b 3.1.x --depth 1 git@github.com:TRIQS/ctint.git ctint.src
+    git clone -b 3.1.x --depth 1 https://github.com/TRIQS/ctint.git ctint.src
     # fetch latest changes
     cd ctint.src && git pull && cd ..
     rm -rf ctint.build && mkdir -p ctint.build && cd ctint.build
@@ -91,7 +91,7 @@ testlog="$(pwd)/${log/.log/_test.log}"
 
     cd ${BUILDDIR}
     # install ctseg
-    git clone -b 3.1.x --depth 1 git@github.com:TRIQS/ctseg.git ctseg.src
+    git clone -b 3.1.x --depth 1 https://github.com/TRIQS/ctseg.git ctseg.src
     # fetch latest changes
     cd ctseg.src && git pull && cd ..
     rm -rf ctseg.build && mkdir -p ctseg.build && cd ctseg.build

@@ -66,21 +66,21 @@ exec 3>&1
     cmake --install cthyb.build
 
     echo "[$(date +%H:%M:%S)] Building ctint..." >&3
-    git clone -b 3.3.x --depth 1 git@github.com:TRIQS/ctint.git ctint.src
+    git clone -b 3.3.x --depth 1 https://github.com/TRIQS/ctint.git ctint.src
     cmake -S ctint.src -B ctint.build
     cmake --build ctint.build -j$NCORES
     ctest --test-dir ctint.build -j$NCORES &>> ${testlog}
     cmake --install ctint.build
 
     echo "[$(date +%H:%M:%S)] Building ctseg..." >&3
-    git clone -b 3.3.x --depth 1 git@github.com:TRIQS/ctseg.git ctseg.src
+    git clone -b 3.3.x --depth 1 https://github.com/TRIQS/ctseg.git ctseg.src
     cmake -S ctseg.src -B ctseg.build
     cmake --build ctseg.build -j$NCORES
     ctest --test-dir ctseg.build -j$NCORES &>> ${testlog}
     cmake --install ctseg.build
 
     echo "[$(date +%H:%M:%S)] Building w2dynamics_interface..." >&3
-    git clone -b 3.3.x --depth 1 git@github.com:TRIQS/w2dynamics_interface.git w2dyn.src
+    git clone -b 3.3.x --depth 1 https://github.com/TRIQS/w2dynamics_interface.git w2dyn.src
     cmake -S w2dyn.src -B w2dyn.build
     cmake --build w2dyn.build -j$NCORES
     ctest --test-dir w2dyn.build -j$NCORES &>> ${testlog}
