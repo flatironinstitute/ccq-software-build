@@ -1,0 +1,44 @@
+#
+# Modul coqui compiled with intel oneAPI
+#
+
+set     name        coqui
+set     version     0.2.0_nix2.4_llvm
+set     root        REPLACEDIR
+set     git_hash    db8dfc62476ef303eeffb70a15f7a1169a9d9068
+
+set     description "CoQui v0.2.0 release"
+
+module-whatis   "$description"
+
+proc ModulesHelp { } {
+    global description url version git_hash
+    puts stderr "Description: $description"
+    puts stderr "Version:     $version"
+}
+
+
+module          load    MODULES
+
+setenv CC       clang
+setenv CXX      clang++
+setenv CXXFLAGS "-stdlib=libc++ -Wno-register -march=broadwell"
+setenv FC       gfortran
+setenv BLA_VENDOR Intel10_64_dyn
+
+setenv          slate_ROOT          $root
+setenv          INSTALLDIR          $root
+setenv          MKL_NUM_THREADS     1
+setenv          MKL_INTERFACE_LAYER GNU,LP64
+setenv          MKL_THREADING_LAYER SEQUENTIAL
+setenv          UCX_LOG_LEVEL       error
+
+prepend-path    PATH                $root/bin
+prepend-path    CPLUS_INCLUDE_PATH  $root/include
+prepend-path    LIBRARY_PATH        $root/lib
+prepend-path    LIBRARY_PATH        $root/lib64
+prepend-path    LD_LIBRARY_PATH     $root/lib
+prepend-path    LD_LIBRARY_PATH     $root/lib64
+prepend-path    PYTHONPATH          $root/lib/python3.11/site-packages
+
+

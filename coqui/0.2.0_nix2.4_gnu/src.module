@@ -1,12 +1,13 @@
 #
-# Modul triqs unstable compiled with intel oneAPI
+# Modul coqui compiled with intel oneAPI
 #
 
-set     name        triqs
-set     version     beyondDFT_nix2.3_gnu
+set     name        coqui
+set     version     0.2.0_nix2.4_gnu
 set     root        REPLACEDIR
+set     git_hash    db8dfc62476ef303eeffb70a15f7a1169a9d9068
 
-set     description "beyondDFT package"
+set     description "CoQui v0.2.0 release"
 
 module-whatis   "$description"
 
@@ -25,7 +26,6 @@ setenv CXXFLAGS "-Wno-register -march=broadwell"
 setenv FC       gfortran
 setenv BLA_VENDOR Intel10_64_dyn
 
-setenv          TBLIS_ROOT          $root
 setenv          slate_ROOT          $root
 setenv          INSTALLDIR          $root
 setenv          MKL_NUM_THREADS     1

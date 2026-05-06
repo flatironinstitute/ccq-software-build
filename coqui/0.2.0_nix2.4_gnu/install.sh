@@ -3,14 +3,14 @@
 # installation script for triqs3 stable branch with clang OpenMPI toolchain with new spack modules
 
 # load modules
-MODULES="modules/2.3-20240529 gcc/13.2.0 flexiblas openmpi cmake gmp fftw nfft hdf5/mpi intel-oneapi-mkl boost/libcpp-1.84.0"
+MODULES="modules/2.4-20250724 cmake gcc/13.3.0 openmpi hdf5/mpi boost intel-oneapi-mkl python-mpi fftw"
 module purge
 module load ${MODULES}
 
 export CC=gcc
 export CXX=g++
 export CFLAGS="-march=broadwell"
-export CXXFLAGS="-Wno-register -march=broadwell"
+export CXXFLAGS="-fPIC -Wno-register -march=broadwell"
 export FC=gfortran
 
 export BLA_VENDOR=Intel10_64_dyn
@@ -19,16 +19,19 @@ export BLA_VENDOR=Intel10_64_dyn
 export MKL_INTERFACE_LAYER=GNU,LP64
 export MKL_THREADING_LAYER=SEQUENTIAL
 export MKL_NUM_THREADS=1
-export OMP_NUM_THREADS=12
+export OMP_NUM_THREADS=1
 NCORES=12
 
-BUILDINFO=nix2.3_gnu
-BUILDDIR=/tmp/beyondDFT_${BUILDINFO}_build
+BUILDINFO=0.2.0_nix2.4_gnu
+BUILDDIR=/tmp/coqui_${BUILDINFO}_build
 INSTALLDIR=$(pwd)/installation
 MODULEDIR=$(git rev-parse --show-toplevel)/modules
+
+WORKDIR=$(pwd)
+
+rm -rf "$BUILDDIR"
 mkdir -p $BUILDDIR
 
-export TBLIS_ROOT=${INSTALLDIR}
 export slate_ROOT=${INSTALLDIR}
 
 export PATH=${INSTALLDIR}/bin:$PATH
@@ -45,40 +48,31 @@ testlog="$(pwd)/${log/.log/_test.log}"
     module list
 
     # install SLATE
-    SLVER=slate-2024.05.31
     cd ${BUILDDIR}
-    wget https://github.com/icl-utk-edu/slate/releases/download/v2024.05.31/${SLVER}.tar.gz
-    tar -xf ${SLVER}.tar.gz
-    cd ${SLVER}
+    git clone -b master --depth 1 https://github.com/icl-utk-edu/slate.git slate
+    cd slate
+    git submodule update --init
     mkdir -p build && cd build
-    cmake ../ -Dblas=mkl -DMKL_INTERFACE_FULL=gf_lp64 -DMKL_MPI=openmpi -DMKL_THREADING=sequential -DCMAKE_INSTALL_PREFIX=${INSTALLDIR}
+    cmake ../ -Dblas=mkl -DMKL_INTERFACE_FULL=gf_lp64 -DMKL_MPI=openmpi -DMKL_THREADING=sequential -Dgpu_backend=none -Dbuild_tests=no -DCMAKE_INSTALL_PREFIX=${INSTALLDIR}
     make -j$NCORES
     make install
 
-    # TBLIS
-    git clone -b master --depth 1 git@github.com:devinamatthews/tblis.git tblis
-    # fetch latest changes
-    cd tblis && git pull
-    ./configure --prefix=${INSTALLDIR}
-    make -j$NCORES
-    make install
-
-    # install beyondDFT
+    # install CoQui
     cd ${BUILDDIR}
-    git clone -b main --depth 1 git@github.com:mmorale3/BeyondDFT.git bdft
+    git clone -b v0.2.0 --depth 1 https://github.com/AbInitioQHub/coqui.git coqui
     # fetch latest changes
-    cd bdft && git pull
+    cd coqui && git pull
     mkdir -p build && cd build
-    cmake ../ -DCMAKE_INSTALL_PREFIX=${INSTALLDIR} -DENABLE_FFTW=ON -DENABLE_SLATE=ON  -DENABLE_TBLIS=ON -DENABLE_CUTENSOR=OFF -DENABLE_CUDA=OFF
+    cmake ../ -DCMAKE_INSTALL_PREFIX=${INSTALLDIR} -DCOQUI_PYTHON_SUPPORT=ON 
     # make / test / install
     make -j$NCORES
     #ctest -j$NCORES &>> ${testlog}
     make install
 ) &> ${log}
 
-mkdir -p $MODULEDIR/beyondDFT
-# make the template a proper module
-echo '#%Module' > $MODULEDIR/beyondDFT/$BUILDINFO
+mkdir -p $MODULEDIR/coqui
+echo '#%Module' > $MODULEDIR/coqui/$BUILDINFO
 # update module template
-sed "s|REPLACEDIR|${INSTALLDIR}|g;s|MODULES|${MODULES}|g" < src.module >> $MODULEDIR/beyondDFT/$BUILDINFO
+sed "s|REPLACEDIR|${INSTALLDIR}|g;s|MODULES|${MODULES}|g" < src.module >> $MODULEDIR/coqui/$BUILDINFO
 
+cd $WORKDIR
