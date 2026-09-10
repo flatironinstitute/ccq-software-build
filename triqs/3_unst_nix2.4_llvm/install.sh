@@ -24,8 +24,7 @@ NCORES=20
 
 BUILDINFO=3_unst_nix2.4_llvm
 BUILDDIR=/tmp/triqs${BUILDINFO}_build
-INSTALLDIR=$(pwd)/installation
-MODULEDIR=$(git rev-parse --show-toplevel)/modules
+INSTALLDIR=$(pwd)/installation MODULEDIR=$(git rev-parse --show-toplevel)/modules
 
 rm -rf "$BUILDDIR"
 mkdir -p $BUILDDIR $INSTALLDIR/lib/python3.12/site-packages
